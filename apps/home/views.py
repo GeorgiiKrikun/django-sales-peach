@@ -35,10 +35,19 @@ def speach(request):
 def get_speach(request):
     if request.method == 'POST':
         print("POST " + str(request.POST['AboutInput']))
+    html_template = loader.get_template('home/speach_result.html')
+    context = {'segment': 'speach', 
+               'AboutInput': request.POST['AboutInput'],
+               'Result': 'Result'}
 
-    # Always return an HttpResponseRedirect after successfully dealing
-    # with POST data. This prevents data from being posted twice if a
-    # user hits the Back button.
+    return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="/login/")
+def speach_result(request):
+    if request.method == 'POST':
+        print("POST " + str(request.POST['AboutInput']))
+
+
     return HttpResponseRedirect(reverse('home:speach', args=()))
 
 @login_required(login_url="/login/")
