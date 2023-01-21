@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
+import openai
+import os
 
 
 @login_required(login_url="/login/")
@@ -36,9 +38,27 @@ def get_speach(request):
     if request.method == 'POST':
         print("POST " + str(request.POST['AboutInput']))
     html_template = loader.get_template('home/speach_result.html')
+    my_description = "I work in company named GOGLIKE3000 that sells knifes for wood carving. I want to sell it to the company"
+    my_description += ", that has following about description on their webpage info: " + str(request.POST['AboutInput'])
+    my_description += ". Write me a letter to the CEO of the company that will convince him to buy my product. Format it properly."
+    openai.organization = "org-Mos6UT6EjhlhAQjS4A2Gev4j"
+    openai.api_key = os.getenv("OPENAI_API_KEY", default=None)
+    print(my_description)
+    response = openai.Completion.create(
+    engine="text-davinci-002",
+    prompt=my_description,
+    temperature=0.5,
+    max_tokens=512,
+    top_p=1.0,
+    frequency_penalty=0.0,
+    presence_penalty=0.0)
+
+
+
     context = {'segment': 'speach', 
                'AboutInput': request.POST['AboutInput'],
-               'Result': 'Result'}
+               'Result': response['choices'][0]['text'],
+              }
 
     return HttpResponse(html_template.render(context, request))
 
