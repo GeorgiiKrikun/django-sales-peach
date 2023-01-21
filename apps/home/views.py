@@ -17,10 +17,34 @@ def index(request):
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
+@login_required(login_url="/login/")
+def profile(request):
+    context = {'segment': 'profile'}
+
+    html_template = loader.get_template('home/profile.html')
+    return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="/login/")
+def speach(request):
+    context = {'segment': 'speach'}
+
+    html_template = loader.get_template('home/speach.html')
+    return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="/login/")
+def get_speach(request):
+    if request.method == 'POST':
+        print("POST " + str(request.POST['AboutInput']))
+
+    # Always return an HttpResponseRedirect after successfully dealing
+    # with POST data. This prevents data from being posted twice if a
+    # user hits the Back button.
+    return HttpResponseRedirect(reverse('home:speach', args=()))
 
 @login_required(login_url="/login/")
 def pages(request):
     context = {}
+
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     try:
@@ -42,3 +66,5 @@ def pages(request):
     except:
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
+
+

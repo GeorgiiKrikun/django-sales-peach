@@ -22,11 +22,11 @@
                 </li>
                 <li data-username="Profile Page" 
                     class="nav-item {% if 'profile' in segment %} active {% endif %}">
-                    <a href="/profile.html" class="nav-link">
+                    <a href="{% url 'home:profile' %} " class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-user"></i></span>
                             <span class="pcoded-mtext">Profile Page</span></a>
                 </li>                
-                <li class="nav-item pcoded-menu-caption">
+                {% comment %} <li class="nav-item pcoded-menu-caption">
                     <label>UI Element</label>
                 </li>
                 <li data-username="basic components Button Alert Badges breadcrumb Paggination progress Tooltip popovers Carousel Cards Collapse Tabs pills Modal Grid System Typography Extra Shadows Embeds"
@@ -45,10 +45,22 @@
                         <li class=""><a href="/icon-feather.html" class="">Feather<span
                                 class="pcoded-badge label label-danger">NEW</span></a></li>
                     </ul>
-                </li>
+                </li> {% endcomment %}
                 <li class="nav-item pcoded-menu-caption">
+                    <label>Sales pitch</label>
+                </li> 
+
+                <li data-username="Speach" 
+                    class="nav-item {% if 'speach' in segment %} active {% endif %}">
+                <a href="{% url 'home:speach' %}" class="nav-link">
+                    <span class="pcoded-micon"><i class="feather icon-user"></i></span>
+                        <span class="pcoded-mtext">Speach</span></a>
+                </li>        
+                
+
+                {% comment %} <li class="nav-item pcoded-menu-caption">
                     <label>Forms & table</label>
-                </li>
+                </li> 
                 <li data-username="form elements advance componant validation masking wizard picker select"
                     class="nav-item {% if 'form_elements' in segment %} active {% endif %}">
                     <a href="/form_elements.html" class="nav-link "><span class="pcoded-micon"><i
@@ -105,7 +117,7 @@
                         </span>
                         <span class="pcoded-mtext">Support</span>
                     </a>
-                </li>                
+                </li>                 {% endcomment %}
             </ul>
         </div>
     </div>
