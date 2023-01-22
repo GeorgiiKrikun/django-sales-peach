@@ -6,11 +6,11 @@ Copyright (c) 2019 - present AppSeed.us
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
+from .models import Company, PastRequest
 from django.template import loader
 from django.urls import reverse
 import openai
 import os
-
 
 @login_required(login_url="/login/")
 def index(request):
@@ -26,9 +26,14 @@ def profile(request):
     html_template = loader.get_template('home/profile.html')
     return HttpResponse(html_template.render(context, request))
 
+
+
 @login_required(login_url="/login/")
 def speach(request):
-    context = {'segment': 'speach'}
+    context = {'segment': 'speach',
+               'company_options': ["amazon", "celantur"]}
+
+    current_user = request.user
 
     html_template = loader.get_template('home/speach.html')
     return HttpResponse(html_template.render(context, request))
@@ -36,9 +41,21 @@ def speach(request):
 @login_required(login_url="/login/")
 def get_speach(request):
     if request.method == 'POST':
-        print("POST " + str(request.POST['AboutInput']))
+        print("POST " + str(request.POST))
+
+    company = request.POST.get('CompanySelection')
+    print(company)
+    current_user = request.user
+    company = Company.objects.filter(user_id=current_user.pk ).filter(name__iexact=company).first()
+
+
+    # print(current_user.username + " " + company.name)
+
+
+
     html_template = loader.get_template('home/speach_result.html')
-    my_description = "I work in company named GOGLIKE3000 that sells knifes for wood carving. I want to sell it to the company"
+    my_description = "I work in company named " + str(company.name) + "." + " We do the following " + str(company.about) + "."
+    my_description += "I want to sell it to the company" 
     my_description += ", that has following about description on their webpage info: " + str(request.POST['AboutInput'])
     my_description += ". Write me a letter to the CEO of the company that will convince him to buy my product. Format it properly."
     openai.organization = "org-Mos6UT6EjhlhAQjS4A2Gev4j"
