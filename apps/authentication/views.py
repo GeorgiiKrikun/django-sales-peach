@@ -5,9 +5,11 @@ Copyright (c) 2019 - present AppSeed.us
 
 # Create your views here.
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm, SignUpForm
 from core.settings import GITHUB_AUTH
+from django.template import loader
+from django.http import HttpResponse
 
 def login_view(request):
     form = LoginForm(request.POST or None)
@@ -28,7 +30,15 @@ def login_view(request):
         else:
             msg = 'Error validating the form'
 
-    return render(request, "accounts/login.html", {"form": form, "msg": msg, "GITHUB_AUTH": GITHUB_AUTH})
+    html_template = loader.get_template('accounts/login.html')
+    context = {"form": form, "msg": msg, "GITHUB_AUTH": GITHUB_AUTH}
+    return HttpResponse(html_template.render(context, request))
+
+def logout_view(request):
+    logout(request)
+    return redirect("/login")
+
+
 
 
 def register_user(request):
