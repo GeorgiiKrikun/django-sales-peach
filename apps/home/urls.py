@@ -19,6 +19,8 @@ urlpatterns = [
     path('companies', views.companies , name='companies'),
     path('edit_company', views.edit_company , name='edit_company'),
     path('finished_editing_company', views.finished_edit_company , name='finished_editing_company'),
+    path('add_company', views.add_company , name='add_company'),
+    path('finished_adding_company', views.finished_adding_company , name='finished_adding_company'),
 
     # Matches any html file
     # re_path(r'^.*\.*', views.pages, name='pages'),
