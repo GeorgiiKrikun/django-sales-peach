@@ -15,11 +15,13 @@
                 <div class="form-group">
                     <form action="{% url 'home:finished_editing_company'  %}" method="post">
                         {% csrf_token %}
-                        <input type="text" name="company-name" class="form-control" placeholder="Company edit"></br>
+                        <input type="hidden" name="company_id" value="{{company.id}}">
+                        <label for="company_description">Company name:</label>
+                        <input type="text" name="name" class="form-control" value="{{company.name}}"></br>
                         <label for="company_description">Write something about the company here:</label>
-                        <textarea name="AboutInput" class="form-control" id="company_description" rows="3"></textarea>
-                        </textarea></br>
-                        <input type="submit" name="Submit" value="Get result" />
+                        <textarea name="about" class="form-control" id="company_description" rows="3" >{{company.about}}</textarea>
+                        <br>
+                        <input type="submit" name="Submit" value="Save" />
                     </form>
                 </div>
             </div>

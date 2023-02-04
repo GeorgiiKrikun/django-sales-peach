@@ -109,8 +109,6 @@ def companies(request):
     for company in companies:
         context['companies'].append(company)
 
-
-
     html_template = loader.get_template('home/companies.html')
     return HttpResponse(html_template.render(context, request))
 
@@ -126,6 +124,13 @@ def edit_company(request):
     
 @login_required(login_url="/login/")
 def finished_edit_company(request):
+    if request.method == 'POST':
+        print("POST " + str(request.POST))
+        company = Company.objects.get(pk=request.POST['company_id'])
+        company.about = request.POST['about']
+        company.name = request.POST['name']
+        company.save()
+
     return HttpResponseRedirect(reverse('home:companies', args=()))
     
 
