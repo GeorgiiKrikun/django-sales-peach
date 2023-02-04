@@ -16,6 +16,9 @@ urlpatterns = [
     path('speach', views.speach, name='speach'),
     path('get_speach', views.get_speach, name='get_speach'),
     path('speach_result', views.speach_result , name='speach_result'),
+    path('companies', views.companies , name='companies'),
+    path('edit_company', views.edit_company , name='edit_company'),
+    path('finished_editing_company', views.finished_edit_company , name='finished_editing_company'),
 
     # Matches any html file
     # re_path(r'^.*\.*', views.pages, name='pages'),

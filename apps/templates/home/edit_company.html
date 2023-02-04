@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Edit company {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <div class="form-group">
+                    <form action="{% url 'home:finished_editing_company'  %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="company-name" class="form-control" placeholder="Company edit"></br>
+                        <label for="company_description">Write something about the company here:</label>
+                        <textarea name="AboutInput" class="form-control" id="company_description" rows="3"></textarea>
+                        </textarea></br>
+                        <input type="submit" name="Submit" value="Get result" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}{% endblock javascripts %}

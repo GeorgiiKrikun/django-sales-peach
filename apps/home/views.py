@@ -26,14 +26,26 @@ def profile(request):
     html_template = loader.get_template('home/profile.html')
     return HttpResponse(html_template.render(context, request))
 
+@login_required(login_url="/login/")
+def edit_company(request):
+    if request.method == 'POST':
+        print("POST " + str(request.POST))
+        current_user = request.user
+        company = Company.objects.filter(user_id=current_user.pk ).filter(name__iexact=request.POST['name']).first()
+        if company is None:
+            company = Company()
+            company.user = current_user
+            company.name = request.POST['name']
+        company.about = request.POST['']
+        company.save()
+        return HttpResponseRedirect(reverse('home:companies'))
+
 
 
 @login_required(login_url="/login/")
 def speach(request):
     context = {'segment': 'speach',
                'company_options': ["amazon", "celantur"]}
-
-    current_user = request.user
 
     html_template = loader.get_template('home/speach.html')
     return HttpResponse(html_template.render(context, request))
@@ -48,11 +60,6 @@ def get_speach(request):
     current_user = request.user
     company = Company.objects.filter(user_id=current_user.pk ).filter(name__iexact=company).first()
 
-
-    # print(current_user.username + " " + company.name)
-
-
-
     html_template = loader.get_template('home/speach_result.html')
     my_description = "I work in company named " + str(company.name) + "." + " We do the following " + str(company.about) + "."
     my_description += "I want to sell it to the company" 
@@ -62,17 +69,19 @@ def get_speach(request):
     openai.api_key = os.getenv("OPENAI_API_KEY", default=None)
     print(my_description)
     response = openai.Completion.create(
-    engine="text-davinci-002",
-    prompt=my_description,
-    temperature=0.5,
-    max_tokens=512,
-    top_p=1.0,
-    frequency_penalty=0.0,
-    presence_penalty=0.0)
+        engine="text-davinci-002",
+        prompt=my_description,
+        temperature=0.5,
+        max_tokens=512,
+        top_p=1.0,
+        frequency_penalty=0.0,
+        presence_penalty=0.0
+    )
 
 
 
-    context = {'segment': 'speach', 
+    context = {
+               'segment': 'speach', 
                'AboutInput': request.POST['AboutInput'],
                'Result': response['choices'][0]['text'],
               }
@@ -86,6 +95,40 @@ def speach_result(request):
 
 
     return HttpResponseRedirect(reverse('home:speach', args=()))
+
+@login_required(login_url="/login/")
+def companies(request):
+
+    context = {'segment': 'companies',
+               'companies': []}
+
+
+    current_user = request.user
+    companies = Company.objects.filter(user_id=current_user.pk )
+
+    for company in companies:
+        context['companies'].append(company)
+
+
+
+    html_template = loader.get_template('home/companies.html')
+    return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="/login/")
+def edit_company(request):
+    if request.method == 'POST':
+        print("POST " + str(request.POST))
+    company = Company.objects.get(pk=request.POST['company_id'])
+    context = {'company': company,
+                'segment': 'edit_company'}
+    html_template = loader.get_template('home/edit_company.html')
+    return HttpResponse(html_template.render(context, request))
+    
+@login_required(login_url="/login/")
+def finished_edit_company(request):
+    return HttpResponseRedirect(reverse('home:companies', args=()))
+    
+
 
 @login_required(login_url="/login/")
 def pages(request):
