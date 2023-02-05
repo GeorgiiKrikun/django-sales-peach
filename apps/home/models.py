@@ -16,6 +16,10 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+class UserExtended(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    latest_company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
+
 class PastRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)

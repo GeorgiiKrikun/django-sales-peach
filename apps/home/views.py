@@ -6,7 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Company, PastRequest
+from .models import Company, PastRequest, UserExtended
 from django.template import loader
 from django.urls import reverse
 import openai
@@ -41,11 +41,23 @@ def edit_company(request):
         return HttpResponseRedirect(reverse('home:companies'))
 
 
-
 @login_required(login_url="/login/")
 def speach(request):
+   
+    current_user = request.user
+    companies = Company.objects.filter(user_id=current_user.pk )
+    if (UserExtended.objects.filter(user=current_user.pk).exists()):
+        latest_company = UserExtended.objects.get(user=current_user.pk).latest_company
+    else:
+        new_user_extended = UserExtended()
+        new_user_extended.user = current_user
+        new_user_extended.latest_company = companies.first()
+        new_user_extended.save()
+        latest_company = new_user_extended.latest_company
+
     context = {'segment': 'speach',
-               'company_options': ["amazon", "celantur"]}
+               'companies': companies,
+               'selected_company': latest_company}
 
     html_template = loader.get_template('home/speach.html')
     return HttpResponse(html_template.render(context, request))
@@ -55,10 +67,13 @@ def get_speach(request):
     if request.method == 'POST':
         print("POST " + str(request.POST))
 
-    company = request.POST.get('CompanySelection')
-    print(company)
+    company_id = request.POST['CompanySelection']
     current_user = request.user
-    company = Company.objects.filter(user_id=current_user.pk ).filter(name__iexact=company).first()
+    company = Company.objects.get(id=company_id)
+
+    extended_user = UserExtended.objects.get(user=current_user.pk)
+    extended_user.latest_company = company
+    extended_user.save()
 
     html_template = loader.get_template('home/speach_result.html')
     my_description = "I work in company named " + str(company.name) + "." + " We do the following " + str(company.about) + "."
@@ -119,7 +134,7 @@ def edit_company(request):
     if request.POST['submit'] == 'Edit':
         company = Company.objects.get(pk=request.POST['company_id'])
         context = {'company': company,
-                    'segment': 'edit_company'}
+                    'segment': 'companies'}
         html_template = loader.get_template('home/edit_company.html')
         return HttpResponse(html_template.render(context, request))
     elif request.POST['submit'] == 'Delete':
@@ -146,7 +161,7 @@ def add_company(request):
     if request.method == 'POST':
         print("POST " + str(request.POST))
 
-    context = {'segment': 'add_company'}
+    context = {'segment': 'companies'}
     html_template = loader.get_template('home/add_company.html')
     return HttpResponse(html_template.render(context, request))
         

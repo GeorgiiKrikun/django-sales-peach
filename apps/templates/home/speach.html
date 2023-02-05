@@ -20,8 +20,8 @@
                         </textarea></br>
                         <label for="company_select">Select company:</label>
                         <select name="CompanySelection" class="form-control" id="company_select">
-                            {% for company in company_options %}
-                                <option> {{company}}  </option>
+                            {% for company in companies %}
+                                <option value={{company.id}} {% if selected_company == company %} selected {% endif %} > {{company.name}} </option>
                             {% endfor %}
                         </select>
                         <input type="submit" name="Submit" value="Get result" />
