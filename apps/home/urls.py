@@ -23,6 +23,6 @@ urlpatterns = [
     path('finished_adding_company', views.finished_adding_company , name='finished_adding_company'),
 
     # Matches any html file
-    # re_path(r'^.*\.*', views.pages, name='pages'),
+    re_path(r'^.*\.*', views.pages, name='pages'),
 
 ]

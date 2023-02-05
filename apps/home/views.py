@@ -101,6 +101,13 @@ def get_speach(request):
                'Result': response['choices'][0]['text'],
               }
 
+    saved_request = PastRequest()
+    saved_request.user = current_user
+    saved_request.company = company
+    saved_request.about = context["AboutInput"]
+    saved_request.response = context['Result']
+    saved_request.save()
+
     return HttpResponse(html_template.render(context, request))
 
 @login_required(login_url="/login/")
