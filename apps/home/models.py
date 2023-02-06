@@ -16,6 +16,13 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+class Payments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subscription_plan_months = models.IntegerField(default=0)
+    subscription_plan_requests_per_day = models.IntegerField(default=10)
+    subscription_activation_date = models.DateTimeField(null=True)
+    cost_of_subscription = models.FloatField(default=0.0)
+
 class UserExtended(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     latest_company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
