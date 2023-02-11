@@ -9,8 +9,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Company, PastRequest, UserExtended
 from django.template import loader
 from django.urls import reverse
-import openai
-import os
+ 
+import externals.openai as openai
+
 
 @login_required(login_url="/login/")
 def index(request):
@@ -76,29 +77,13 @@ def get_speach(request):
     extended_user.save()
 
     html_template = loader.get_template('home/speach_result.html')
-    my_description = "I work in company named " + str(company.name) + "." + " We do the following " + str(company.about) + "."
-    my_description += "I want to sell it to the company" 
-    my_description += ", that has following about description on their webpage info: " + str(request.POST['AboutInput'])
-    my_description += ". Write me a letter to the CEO of the company that will convince him to buy my product. Format it properly."
-    openai.organization = "org-Mos6UT6EjhlhAQjS4A2Gev4j"
-    openai.api_key = os.getenv("OPENAI_API_KEY", default=None)
-    print(my_description)
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=my_description,
-        temperature=0.5,
-        max_tokens=512,
-        top_p=1.0,
-        frequency_penalty=0.0,
-        presence_penalty=0.0
-    )
-
-
+    
+    response = openai.get_openai_response(company.name, company.about, request.POST['AboutInput'])
 
     context = {
                'segment': 'speach', 
                'AboutInput': request.POST['AboutInput'],
-               'Result': response['choices'][0]['text'],
+               'Result': response,
               }
 
     saved_request = PastRequest()
@@ -185,11 +170,6 @@ def finished_adding_company(request):
         company.save()
 
     return HttpResponseRedirect(reverse('home:companies', args=()))
-
-
-
-
-
 
 @login_required(login_url="/login/")
 def pages(request):
