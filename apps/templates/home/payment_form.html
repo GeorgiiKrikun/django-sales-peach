@@ -1,0 +1,31 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Speach {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <div class="form-group">
+                    <form action="{% url 'home:complete_payment'  %}" method="post">
+                        {% csrf_token %}
+                        <label for="company_description">Plan selected: {{ plan.name }}, cost {{ plan.cost }}</label>
+                        <label for="company_description">Here, payment details form</label>
+                        <input type="hidden" name="plan" value="{{ plan.id }}">
+                        <input type="submit" name="Submit" value="Finish payment" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}{% endblock javascripts %}

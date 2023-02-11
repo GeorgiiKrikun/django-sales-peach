@@ -28,10 +28,13 @@ class PaymentPlans(models.Model):
     background_color = models.CharField(max_length=7, default="#FFFFFF")
     cost = models.FloatField(default=0.0)
     requests_per_day = models.IntegerField(default=10)
+    available_to_select = models.BooleanField(default=False)
+
 
 class UserExtended(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    latest_company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
+    subscription_plan = models.ForeignKey(PaymentPlans, on_delete=models.SET_NULL, null=True)
+    latest_company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
 
 class PastRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
