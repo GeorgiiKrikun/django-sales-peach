@@ -6,7 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Company, PastRequest, UserExtended
+from .models import Company, PastRequest, UserExtended, PaymentPlans, Payments
 from django.template import loader
 from django.urls import reverse
  
@@ -135,6 +135,26 @@ def edit_company(request):
         return HttpResponseRedirect(reverse('home:companies', args=()))
     else:
         return HttpResponseRedirect(reverse('home:companies', args=()))
+
+@login_required(login_url="/login/")
+def payments(request):
+    plans = PaymentPlans.objects.all()
+    context = {'segment': 'payments',
+               'plans': plans}
+    html_template = loader.get_template('home/payments.html')
+    return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="/login/")
+def make_payment(request):
+    print(request.GET)
+    plan_id = request.GET.get('id')
+    selected_plan = PaymentPlans.objects.get(pk=plan_id)
+    print("SELECTED PLAN = " + str(selected_plan.id) + " " + selected_plan.name + " " + str(selected_plan.cost))
+    context = {'segment': 'payments',
+               'plan': selected_plan}
+    # html_template = loader.get_template('home/make_payment.html')
+    # return HttpResponse(html_template.render(context, request))
+    return HttpResponseRedirect(reverse('home:payments', args=()))
 
     
 @login_required(login_url="/login/")

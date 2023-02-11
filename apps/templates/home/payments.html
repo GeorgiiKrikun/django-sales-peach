@@ -1,0 +1,37 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Speach {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ ASSETS_ROOT }}/css/payment_table.css">
+
+
+{% endblock stylesheets %}
+
+
+{% block content %}
+
+
+<div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              {% for plan in plans %}
+                <div class="columns">
+                    <ul class="price" >
+                      <li style="background-color: {{ plan.background_color }}; font-size: 25px; color: #000000; font-weight: bold">{{ plan.name }}</li>
+                      <li class="grey">{{ plan.cost }} $/per month</li>
+                      <li class="grey"> Number of requests per day: {{ plan.requests_per_day }}</li>
+                      <li class="grey"><a href="{% url 'home:make_payment' %}?id={{ plan.id }}" class="button">Sign Up</a></li>
+                    </ul>
+                  </div>
+              {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}{% endblock javascripts %}

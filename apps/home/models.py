@@ -23,6 +23,12 @@ class Payments(models.Model):
     subscription_activation_date = models.DateTimeField(null=True)
     cost_of_subscription = models.FloatField(default=0.0)
 
+class PaymentPlans(models.Model):
+    name = models.CharField(max_length=100)
+    background_color = models.CharField(max_length=7, default="#FFFFFF")
+    cost = models.FloatField(default=0.0)
+    requests_per_day = models.IntegerField(default=10)
+
 class UserExtended(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     latest_company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)

@@ -26,7 +26,7 @@
                         <span class="pcoded-micon"><i class="feather icon-user"></i></span>
                             <span class="pcoded-mtext">Profile Page</span></a>
                 </li>                
-                {% comment %} <li class="nav-item pcoded-menu-caption">
+                <li class="nav-item pcoded-menu-caption">
                     <label>UI Element</label>
                 </li>
                 <li data-username="basic components Button Alert Badges breadcrumb Paggination progress Tooltip popovers Carousel Cards Collapse Tabs pills Modal Grid System Typography Extra Shadows Embeds"
@@ -45,7 +45,7 @@
                         <li class=""><a href="/icon-feather.html" class="">Feather<span
                                 class="pcoded-badge label label-danger">NEW</span></a></li>
                     </ul>
-                </li> {% endcomment %}
+                </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label>Sales pitch</label>
                 </li> 
@@ -55,7 +55,14 @@
                 <a href="{% url 'home:speach' %}" class="nav-link">
                     <span class="pcoded-micon"><i class="feather icon-message-circle"></i></span>
                         <span class="pcoded-mtext">Speach</span></a>
+                </li>     
+                <li data-username="Payments" 
+                class="nav-item {% if 'payments' in segment %} active {% endif %}">
+                <a href="{% url 'home:payments' %}" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-message-circle"></i></span>
+                    <span class="pcoded-mtext">Payments</span></a>
                 </li>        
+
 
                 <li data-username="Companies" 
                     class="nav-item {% if 'companies' in segment %} active {% endif %}">
@@ -70,7 +77,7 @@
                 </li> 
                 <li class=""><a href="/icon-feather.html" class="">Feather<span
                     class="pcoded-badge label label-danger">NEW</span></a></li>
-                {% comment %} <li data-username="form elements advance componant validation masking wizard picker select"
+                 <li data-username="form elements advance componant validation masking wizard picker select"
                     class="nav-item {% if 'form_elements' in segment %} active {% endif %}">
                     <a href="/form_elements.html" class="nav-link "><span class="pcoded-micon"><i
                             class="feather icon-file-text"></i></span><span
@@ -110,7 +117,7 @@
                 <li data-username="Sample Page" class="nav-item"><a href="/page-blank.html" class="nav-link"><span
                         class="pcoded-micon"><i class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Sample page</span></a>
                 </li>
-
+``
                 <li data-username="Disabled Menu" class="nav-item">
                     <a href="{% url 'logout' %}" class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-power"></i></span><span class="pcoded-mtext">Logout</span>
@@ -126,7 +133,7 @@
                         </span>
                         <span class="pcoded-mtext">Support</span>
                     </a>
-                </li>                 {% endcomment %}
+                </li>
             </ul>
         </div>
     </div>
