@@ -9,7 +9,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Company, PastRequest, UserExtended, PaymentPlans, Payments
 from django.template import loader
 from django.urls import reverse
- 
+from django.utils import timezone
+
 import externals.openai as openai
 
 
@@ -47,7 +48,7 @@ def speach(request):
    
     current_user = request.user
     companies = Company.objects.filter(user_id=current_user.pk )
-    if (UserExtended.objects.filter(user=current_user.pk).exists()):
+    if (UserExtended.objects.filter(user=current_user.pk).exists()): #TODO move that to registration
         latest_company = UserExtended.objects.get(user=current_user.pk).latest_company
     else:
         new_user_extended = UserExtended()
@@ -55,6 +56,24 @@ def speach(request):
         new_user_extended.latest_company = companies.first()
         new_user_extended.save()
         latest_company = new_user_extended.latest_company
+
+    user_extended = UserExtended.objects.get(user=current_user.pk)
+    last_used = user_extended.last_activity
+
+    #check if last used was yesterday, if so reset requests today
+    if (timezone.now() - last_used).days > 0 or last_used.day < timezone.now().day :
+        user_extended.requests_today = 0
+        user_extended.save()
+
+    requests_today = user_extended.requests_today    
+    max_requests_per_day = UserExtended.objects.get(user=current_user.pk).subscription_plan.requests_per_day
+    if (requests_today >= max_requests_per_day):
+        html_template = loader.get_template('home/payments.html')
+        plans = PaymentPlans.objects.all().filter(available_to_select=True)
+        context = {'segment': 'payments',
+                   'plans': plans}
+        return HttpResponse(html_template.render(context, request))
+
 
     context = {'segment': 'speach',
                'companies': companies,
@@ -74,6 +93,8 @@ def get_speach(request):
 
     extended_user = UserExtended.objects.get(user=current_user.pk)
     extended_user.latest_company = company
+    extended_user.requests_today = extended_user.requests_today + 1
+    extended_user.last_activity = timezone.now()
     extended_user.save()
 
     html_template = loader.get_template('home/speach_result.html')
@@ -99,8 +120,6 @@ def get_speach(request):
 def speach_result(request):
     if request.method == 'POST':
         print("POST " + str(request.POST['AboutInput']))
-
-
     return HttpResponseRedirect(reverse('home:speach', args=()))
 
 @login_required(login_url="/login/")
@@ -163,6 +182,7 @@ def complete_payment(request):
     user = request.user
     user_extended = UserExtended.objects.filter(user=user).first()
     user_extended.subscription_plan = plan
+    user_extended.requests_today = 0
     user_extended.save()
     return HttpResponseRedirect(reverse('home:payments', args=()))
     

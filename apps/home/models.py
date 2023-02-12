@@ -5,7 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.utils import timezone
 # Create your models here.
 
 class Company(models.Model):
@@ -34,6 +34,9 @@ class PaymentPlans(models.Model):
 class UserExtended(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     subscription_plan = models.ForeignKey(PaymentPlans, on_delete=models.SET_NULL, null=True)
+    last_activity = models.DateTimeField(default=timezone.now(), editable=True)
+    requests_today = models.IntegerField(default=0)
+
     latest_company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
 
 class PastRequest(models.Model):
