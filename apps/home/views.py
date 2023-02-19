@@ -14,21 +14,21 @@ from django.utils import timezone
 import externals.openai as openai
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def index(request):
     context = {'segment': 'index'}
 
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def profile(request):
     context = {'segment': 'profile'}
 
     html_template = loader.get_template('home/profile.html')
     return HttpResponse(html_template.render(context, request))
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def edit_company(request):
     if request.method == 'POST':
         print("POST " + str(request.POST))
@@ -43,7 +43,7 @@ def edit_company(request):
         return HttpResponseRedirect(reverse('home:companies'))
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def speach(request):
    
     current_user = request.user
@@ -82,7 +82,7 @@ def speach(request):
     html_template = loader.get_template('home/speach.html')
     return HttpResponse(html_template.render(context, request))
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def get_speach(request):
     if request.method == 'POST':
         print("POST " + str(request.POST))
@@ -116,13 +116,13 @@ def get_speach(request):
 
     return HttpResponse(html_template.render(context, request))
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def speach_result(request):
     if request.method == 'POST':
         print("POST " + str(request.POST['AboutInput']))
     return HttpResponseRedirect(reverse('home:speach', args=()))
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def companies(request):
 
     context = {'segment': 'companies',
@@ -138,7 +138,7 @@ def companies(request):
     html_template = loader.get_template('home/companies.html')
     return HttpResponse(html_template.render(context, request))
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def edit_company(request):
     if request.method == 'POST':
         print("POST " + str(request.POST))
@@ -163,7 +163,7 @@ def payments(request):
     html_template = loader.get_template('home/payments.html')
     return HttpResponse(html_template.render(context, request))
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def make_payment(request):
     print(request.GET)
     plan_id = request.GET.get('id')
@@ -175,7 +175,7 @@ def make_payment(request):
     return HttpResponse(html_template.render(context, request))
     # return HttpResponseRedirect(reverse('home:payments', args=()))
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def complete_payment(request):
     context = {'segment': 'payments'}
     plan = PaymentPlans.objects.get(pk = request.POST['plan'])
@@ -186,7 +186,7 @@ def complete_payment(request):
     user_extended.save()
     return HttpResponseRedirect(reverse('home:payments', args=()))
     
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def finished_edit_company(request):
     if request.method == 'POST':
         print("POST " + str(request.POST))
@@ -197,7 +197,7 @@ def finished_edit_company(request):
 
     return HttpResponseRedirect(reverse('home:companies', args=()))
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def add_company(request):
     if request.method == 'POST':
         print("POST " + str(request.POST))
@@ -207,7 +207,7 @@ def add_company(request):
     return HttpResponse(html_template.render(context, request))
         
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def finished_adding_company(request):
     if request.method == 'POST':
         print("POST " + str(request.POST))
@@ -220,7 +220,7 @@ def finished_adding_company(request):
 
     return HttpResponseRedirect(reverse('home:companies', args=()))
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def pages(request):
     context = {}
 
