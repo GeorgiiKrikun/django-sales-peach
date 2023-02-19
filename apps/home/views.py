@@ -155,7 +155,7 @@ def edit_company(request):
     else:
         return HttpResponseRedirect(reverse('home:companies', args=()))
 
-@login_required(login_url="/login/")
+@login_required(login_url="authentication:login")
 def payments(request):
     plans = PaymentPlans.objects.all().filter(available_to_select=True)
     context = {'segment': 'payments',

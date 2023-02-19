@@ -33,7 +33,7 @@
                     <!-- Hide the form on success -->
                     {% if success %}
 
-                        <a href="{% url 'login' %}" class="btn btn-primary shadow-2 mb-4">Sign IN</a>
+                        <a href="{% url 'authentication:login' %}" class="btn btn-primary shadow-2 mb-4">Sign IN</a>
 
                     {% else %}
 
@@ -65,7 +65,7 @@
 
                         </form>
 
-                        <p class="mb-0 text-muted">Already have an account? <a href="{% url 'login' %}" >Login</a></p>
+                        <p class="mb-0 text-muted">Already have an account? <a href="{% url 'authentication:login' %}" >Login</a></p>
                     
                     {% endif %}
 
