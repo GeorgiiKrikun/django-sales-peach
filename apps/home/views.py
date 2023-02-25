@@ -91,6 +91,8 @@ def get_speach(request):
     current_user = request.user
     company = Company.objects.get(id=company_id)
 
+    temperature = 0
+
     extended_user = UserExtended.objects.get(user=current_user.pk)
     extended_user.latest_company = company
     extended_user.requests_today = extended_user.requests_today + 1
@@ -99,20 +101,59 @@ def get_speach(request):
 
     html_template = loader.get_template('home/speach_result.html')
     
-    response = openai.get_openai_response(company.name, company.about, request.POST['AboutInput'])
-
-    context = {
-               'segment': 'speach', 
-               'AboutInput': request.POST['AboutInput'],
-               'Result': response,
-              }
+    response = openai.get_openai_response(company.name, company.about, request.POST['AboutInput'], temperature)
 
     saved_request = PastRequest()
     saved_request.user = current_user
     saved_request.company = company
-    saved_request.about = context["AboutInput"]
-    saved_request.response = context['Result']
+    saved_request.about = request.POST["AboutInput"]
+    saved_request.response = response
+    saved_request.temperature = temperature
     saved_request.save()
+
+    context = {
+               'segment': 'speach', 
+               'PastRequest': saved_request,
+               'About': request.POST['AboutInput']
+              }
+
+    return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="authentication:login")
+def retry_speach(request):
+    if request.method == 'POST':
+        print("POST " + str(request.POST))  
+    #Get past request object from id
+    past_requst = PastRequest.objects.get( id=request.POST['past_request_id'] )
+        
+
+    current_user = request.user
+    company = past_requst.company
+
+    temperature = min(past_requst.temperature + 0.5, 1.0)
+
+    extended_user = UserExtended.objects.get(user=current_user.pk)
+    extended_user.latest_company = company
+    extended_user.requests_today = extended_user.requests_today + 1
+    extended_user.last_activity = timezone.now()
+    extended_user.save()
+
+    html_template = loader.get_template('home/speach_result.html')
+    
+    response = openai.get_openai_response(company.name, company.about, request.POST['past_about'], temperature)
+
+    saved_request = PastRequest()
+    saved_request.user = current_user
+    saved_request.company = company
+    saved_request.response = response
+    saved_request.temperature = temperature
+    saved_request.save()
+
+    context = {
+               'segment': 'speach', 
+               'PastRequest': saved_request,
+               'About': request.POST['past_about']
+              }
 
     return HttpResponse(html_template.render(context, request))
 

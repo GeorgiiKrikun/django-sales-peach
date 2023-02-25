@@ -15,6 +15,7 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('speach', views.speach, name='speach'),
     path('get_speach', views.get_speach, name='get_speach'),
+    path('retry_speach', views.retry_speach, name='retry_speach'),
     path('speach_result', views.speach_result , name='speach_result'),
     path('companies', views.companies , name='companies'),
     path('edit_company', views.edit_company , name='edit_company'),
@@ -24,6 +25,7 @@ urlpatterns = [
     path('payments', views.payments , name='payments'),
     path('make_payment', views.make_payment , name='make_payment'),
     path('complete_payment', views.complete_payment, name='complete_payment'),
+
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),

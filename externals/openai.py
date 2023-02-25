@@ -12,13 +12,13 @@ def get_openai_query(company_from_name, company_from_about, company_to_about):
     my_description += ". Write me a letter to the CEO of the company that will convince him to buy my product. Format it properly."
     return my_description
 
-def get_openai_response(company_from_name, company_from_about, company_to_about):
+def get_openai_response(company_from_name, company_from_about, company_to_about, temperature = 0):
     if not settings.DEBUG:
         print("RELEASE MODE")
         response = openai.Completion.create(
             engine="davinci",
             prompt=get_openai_query(company_from_name, company_from_about, company_to_about),
-            temperature=0.9,
+            temperature=temperature,
             max_tokens=150,
             top_p=1,
             frequency_penalty=0.0,
@@ -27,4 +27,4 @@ def get_openai_response(company_from_name, company_from_about, company_to_about)
         return response['choices'][0]['text']
     
     print("DEBUG MODE")
-    return "Sales letter from " + company_from_name + "|With following about: " + company_from_about + "|To the company with following about: " + company_to_about
+    return "Sales letter from " + company_from_name + "|With following about: " + company_from_about + "|To the company with following about: " + company_to_about +". T= " + str(temperature)
