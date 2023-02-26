@@ -9,25 +9,20 @@
 
 
 <div class="pcoded-main-container">
-    <div class="pcoded-wrapper">
-        <div class="pcoded-content">
-            <div class="pcoded-inner-content">
-                <div class="form-group">
-                    <h4> Output text:  </h4>
-                    {{ PastRequest.response }}
-         
-                <form action="{% url 'home:retry_speach'  %}" method="post">
-                    {% csrf_token %}
-                    <label for="company_description">Not satisfied with result? Try again:</label> 
-                    <BR>
-                    <input type="hidden" name="past_request_id" value="{{ PastRequest.id }}" />
-                    <input type="hidden" name="past_about" value="{{ About }}" />
-                    <BR>
-                    <input type="submit" name="Submit" value="Try again!" />
-                </form>
-                </div>
-
-            </div>
+    <div class="pcoded-content">
+            <div class="form-group">
+                <h4> Output text:  </h4>
+                {{ PastRequest.response }}
+        
+            <form action="{% url 'home:retry_speach'  %}" method="post">
+                {% csrf_token %}
+                <label for="company_description">Not satisfied with result? Try again:</label> 
+                <BR>
+                <input type="hidden" name="past_request_id" value="{{ PastRequest.id }}" />
+                <input type="hidden" name="past_about" value="{{ About }}" />
+                <BR>
+                <input type="submit" name="Submit" value="Try again!" />
+            </form>
         </div>
     </div>
 </div>
