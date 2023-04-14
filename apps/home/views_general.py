@@ -9,11 +9,35 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Company, PastRequest, UserExtended, PaymentPlans, Payments
 from django.template import loader
 from django.urls import reverse
-from django.utils import timezone
 
 from django.views.generic import ListView, DetailView, UpdateView
 
-import externals.openai as openai
+
+from django.shortcuts import get_object_or_404, redirect
+from django.template.response import TemplateResponse
+from payments import get_payment_model, RedirectNeeded
+
+def payment_details(request, payment_id):
+    payment = get_object_or_404(get_payment_model(), id=payment_id)
+
+    try:
+        form = payment.get_form(data=request.POST or None)
+    except RedirectNeeded as redirect_to:
+        return redirect(str(redirect_to))
+
+    return TemplateResponse(
+        request,
+        'home/django-payment.html',
+        {'form': form, 'payment': payment}
+    )
+
+def payment_success(request):
+    html_template = loader.get_template('home/django-payments-success.html')
+    return HttpResponse(html_template.render({}, request))
+
+def payment_failure(request):
+    html_template = loader.get_template('home/django-payments-failure.html')
+    return HttpResponse(html_template.render({}, request))
 
 
 @login_required(login_url="authentication:login")

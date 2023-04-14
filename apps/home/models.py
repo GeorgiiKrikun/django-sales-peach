@@ -7,6 +7,35 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 # Create your models here.
+# mypaymentapp/models.py
+from decimal import Decimal
+
+from payments import PurchasedItem
+from payments.models import BasePayment
+
+class Payment(BasePayment):
+
+    def get_failure_url(self) -> str:
+        # Return a URL where users are redirected after
+        # they fail to complete a payment:
+        # return f"http://example.com/payments/{self.pk}/failure"
+        return "http://127.0.0.1:8000/speach/payment_failure/"
+
+    def get_success_url(self) -> str:
+        # Return a URL where users are redirected after
+        # they successfully complete a payment:
+        # return f"http://example.com/payments/{self.pk}/success"
+        return "http://127.0.0.1:8000/speach/payment_success/"
+
+    def get_purchased_items(self): #-> Iterable[PurchasedItem]:
+        # Return items that will be included in this payment.
+        yield PurchasedItem(
+            name='The Hound of the Baskervilles',
+            sku='BSKV',
+            quantity=9,
+            price=Decimal(10),
+            currency='USD',
+        )
 
 class Company(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

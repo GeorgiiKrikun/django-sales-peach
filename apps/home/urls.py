@@ -35,7 +35,9 @@ urlpatterns = [
     # Test stuff
     path('company_test_view', views_general.CompaniesListView.as_view(), name='company_test_view'),
     path('past_req_update/<int:pk>', views_general.PastRequestUpdateView.as_view(), name='company_test_view'),
-
+    path('payment_details/<int:payment_id>', views_general.payment_details, name='payment_details'),
+    path('payment_success', views_general.payment_success, name='payment_success'),
+    path('payment_failure', views_general.payment_failure, name='payment_failure'),
 
     # Matches any html file
     re_path(r'^.*\.*', views_general.pages, name='pages'),
