@@ -7,6 +7,8 @@
 
 {% block content %}
 
+{% load static %}
+
 
 <div class="pcoded-main-container">
     <div class="pcoded-content">
@@ -22,6 +24,9 @@
             <label for="company_description">Feedback goes here:</label>
             <textarea name="feedback_content" class="form-control" id="company_description" maxlength=1000 rows="5"></textarea>
             </textarea></br>
+            <input type="button" value="Add File" onclick="addFile()" />
+            <input type="button" value="Remove File" onclick="removeFile()" />
+            <div id="file_list"></div>
             <input type="submit" name="Submit" value="Submit" />
         </form>
     </div> 
@@ -29,4 +34,6 @@
 
 {% endblock content %}
 
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script src="{% static 'assets/js/add_file.js' %}"></script> 
+{% endblock javascripts %}
