@@ -37,6 +37,24 @@ class Payment(BasePayment):
             currency='USD',
         )
 
+class Feedback(models.Model):
+    feedback_size = 1000
+    topic_ids = ["bug report", 
+                 "feature request",
+                 "thanks",
+                 "other"]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    topic_id = models.IntegerField(default=0)
+    feedback = models.CharField(max_length=feedback_size)
+
+    
+
+    
+class FeedbackFile(models.Model):
+    feedback = models.ForeignKey(Feedback, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='feedback_files')
+
 class Company(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)

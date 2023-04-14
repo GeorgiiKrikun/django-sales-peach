@@ -5,7 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.urls import path, re_path
 from apps.home import views_general
-from apps.home.views import payments, speach, companies
+from apps.home.views import payments, speach, companies, feedback
 
 
 app_name = "home"
@@ -31,7 +31,9 @@ urlpatterns = [
     path('get_speach', speach.get_speach, name='get_speach'),
     path('retry_speach', speach.retry_speach, name='retry_speach'),
     path('speach_result', speach.speach_result , name='speach_result'),
-
+    #Feedback
+    path('feedback', feedback.feedback , name='feedback'),
+    path('submit_feedback', feedback.submit_feedback , name='submit_feedback'),
     # Test stuff
     path('company_test_view', views_general.CompaniesListView.as_view(), name='company_test_view'),
     path('past_req_update/<int:pk>', views_general.PastRequestUpdateView.as_view(), name='company_test_view'),
