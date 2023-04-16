@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
-from ..models import Feedback
+from ..models import Feedback, FeedbackFile
 from django.template import loader
 from django.urls import reverse
 from django.utils import timezone
@@ -22,6 +22,15 @@ def submit_feedback(request):
         feedback.topic_id = request.POST['topic_selection']
         feedback.feedback = request.POST['feedback_content']
         feedback.save()
+        
+        if request.FILES:
+            for field in request.FILES:
+                file = request.FILES[field]
+                feedbackFile = FeedbackFile()
+                feedbackFile.feedback = feedback
+                file.name = str(timezone.now()) + "_" + file.name
+                feedbackFile.file = file
+                feedbackFile.save()
         html_template = loader.get_template('home/thank_for_your_feedback.html')
         return HttpResponse(html_template.render({}, request))
     else:
