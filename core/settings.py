@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djstripe',
     'payments',
     'apps.home',                                    # Enable the inner home (home)
     'allauth',                                      # OAuth new
@@ -81,6 +82,12 @@ TEMPLATES = [
         },
     },
 ]
+
+STRIPE_TEST_PUBLIC_KEY = os.environ.get("STRIPE_TEST_PUBLIC_KEY", "<your publishable key>")
+STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY", "<your secret key>")
+STRIPE_LIVE_MODE = False
+DJSTRIPE_WEBHOOK_SECRET = "whsec_xxx"  # We don't use this, but it must be set
+
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
