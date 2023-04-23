@@ -15,6 +15,13 @@ from django.views.generic import ListView, DetailView, UpdateView
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from payments import get_payment_model, RedirectNeeded
+from djstripe.models import Product, Plan
+import stripe
+import os
+
+stripe.api_key = os.environ.get("STRIPE_TEST_SECRET_KEY")
+
+
 
 def payment_details(request, payment_id):
     payment = get_object_or_404(get_payment_model(), id=payment_id)
@@ -38,6 +45,33 @@ def payment_failure(request):
     html_template = loader.get_template('home/django-payments-failure.html')
     return HttpResponse(html_template.render({}, request))
 
+def select_subscriptions(request):
+    html_template = loader.get_template('home/select_subscriptions.html')
+    return HttpResponse(html_template.render({'products': Product.objects.all()}, request))
+
+def subscription_selected(request):
+    html_template = loader.get_template('home/select_subscriptions.html')
+    price_id = request.POST['price_id']
+    session = stripe.checkout.Session.create(
+    success_url='http://127.0.0.1:8000/speach/subscription_success',
+    cancel_url='http://127.0.0.1:8000/speach/subscription_failure',
+        mode='subscription',
+        line_items=[{
+            'price': price_id,
+            # For metered billing, do not pass quantity
+            'quantity': 1
+        }],
+    )
+
+    return HttpResponseRedirect(session.url)
+
+def subscription_success(request):
+    html_template = loader.get_template('home/subscription_success.html')
+    return HttpResponse(html_template.render({}, request))
+
+def subscription_failure(request):
+    html_template = loader.get_template('home/subscription_failure.html')
+    return HttpResponse(html_template.render({}, request))
 
 @login_required(login_url="authentication:login")
 def index(request):

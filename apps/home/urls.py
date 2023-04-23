@@ -40,6 +40,11 @@ urlpatterns = [
     path('payment_details/<int:payment_id>', views_general.payment_details, name='payment_details'),
     path('payment_success', views_general.payment_success, name='payment_success'),
     path('payment_failure', views_general.payment_failure, name='payment_failure'),
+    # Stripe test stuff
+    path('select_subscriptions', views_general.select_subscriptions, name='select_subscriptions'),
+    path('subscription_selected', views_general.subscription_selected, name='subscription_selected'),
+    path('subscription_success', views_general.subscription_success, name='subscription_success'),
+    path('subscription_failure', views_general.subscription_failure, name='subscription_failure'),
 
     # Matches any html file
     re_path(r'^.*\.*', views_general.pages, name='pages'),
