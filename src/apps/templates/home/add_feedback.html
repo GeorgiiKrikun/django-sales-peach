@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Feedback {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+{% load static %}
+
+
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+        <form action="{% url 'home:submit_feedback'  %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="topic_select">Feedback topic:</label>
+            <select name="topic_selection" class="form-control" id="topic_select">
+                {% for problem in problems %}
+                    <option value={{ forloop.counter0 }} > {{ problem }} </option>
+                {% endfor %}
+            </select>
+
+            <label for="company_description">Feedback goes here:</label>
+            <textarea name="feedback_content" class="form-control" id="company_description" maxlength=1000 rows="5"></textarea>
+            </textarea></br>
+            <input type="button" value="Add File" onclick="addFile()" />
+            <input type="button" value="Remove File" onclick="removeFile()" />
+            <div id="file_list"></div>
+            <input type="submit" name="Submit" value="Submit" />
+        </form>
+    </div> 
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="{% static 'assets/js/add_file.js' %}"></script> 
+{% endblock javascripts %}
