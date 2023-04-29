@@ -1,28 +1,17 @@
-version: '3.8'
+secrets:
+  STRIPE_TEST_SECRET_KEY:
+    file: /run/secrets/STRIPE_TEST_SECRET_KEY
+  STRIPE_TEST_PUBLIC_KEY:
+    file: /run/secrets/STRIPE_TEST_PUBLIC_KEY
+  OPEN_API_KEY:
+    file: /run/secrets/OPEN_API_KEY
+
 services:
-  appseed-app:
-    container_name: appseed_app
-    restart: always
+  salespeach:
+    container_name: salespeach
+    restart: no
     env_file: .env
-    build: .
-    networks:
-      - db_network
-      - web_network
-  nginx:
-    container_name: nginx
-    restart: always
-    image: "nginx:latest"
     ports:
-      - "5085:5085"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-    networks:
-      - web_network
-    depends_on: 
-      - appseed-app
-networks:
-  db_network:
-    driver: bridge
-  web_network:
-    driver: bridge
- 
+      - "8000:8000"
+    build: 
+      context: .

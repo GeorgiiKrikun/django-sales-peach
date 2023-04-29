@@ -3,7 +3,20 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-import os, environ
+import os, environ, openai, sys
+
+def search_in_environment_or_docker_secrets(key : str) -> str:
+    print(os.environ)
+    result = ""
+    try:
+        return os.environ[key]
+    except KeyError:
+        print("Key " + key + " not found in environment variables. Trying to find it in docker secrets", sys.stderr)
+    try:    
+        return open('/run/secrets/' + key).read().strip()
+    except FileNotFoundError:
+        print("Key " + key + " not found in docker secrets", file=sys.stderr)
+    return "KEY_NOT_FOUND"
 
 env = environ.Env(
     # set casting, default value
@@ -83,8 +96,12 @@ TEMPLATES = [
     },
 ]
 
-STRIPE_TEST_PUBLIC_KEY = os.environ.get("STRIPE_TEST_PUBLIC_KEY", "<your publishable key>")
-STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY", "<your secret key>")
+STRIPE_TEST_PUBLIC_KEY = search_in_environment_or_docker_secrets("STRIPE_TEST_PUBLIC_KEY")
+STRIPE_TEST_SECRET_KEY = search_in_environment_or_docker_secrets("STRIPE_TEST_SECRET_KEY")
+openai.api_key = search_in_environment_or_docker_secrets("OPENAI_API_KEY")
+
+
+
 STRIPE_LIVE_MODE = False
 DJSTRIPE_WEBHOOK_SECRET = "whsec_xxx"  # We don't use this, but it must be set
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"

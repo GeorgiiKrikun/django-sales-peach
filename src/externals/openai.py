@@ -3,7 +3,6 @@ import os
 from django.conf import settings
 
 openai.organization = "org-Mos6UT6EjhlhAQjS4A2Gev4j"
-openai.api_key = os.getenv("OPENAI_API_KEY", default=None)
 
 def get_openai_query(company_from_name, company_from_about, company_to_about):
     my_description = "I work in company named " + str(company_from_name) + "." + " We do the following " + str(company_from_about) + "."

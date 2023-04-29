@@ -1,5 +1,7 @@
 #use debian base image
 FROM debian:latest
 
+ENV DEBIAN_FRONTEND noninteractive
+
 
 
