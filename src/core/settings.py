@@ -6,7 +6,6 @@ Copyright (c) 2019 - present AppSeed.us
 import os, environ, openai, sys
 
 def search_in_environment_or_docker_secrets(key : str) -> str:
-    print(os.environ)
     result = ""
     try:
         return os.environ[key]
@@ -99,9 +98,6 @@ TEMPLATES = [
 STRIPE_TEST_PUBLIC_KEY = search_in_environment_or_docker_secrets("STRIPE_TEST_PUBLIC_KEY")
 STRIPE_TEST_SECRET_KEY = search_in_environment_or_docker_secrets("STRIPE_TEST_SECRET_KEY")
 openai.api_key = search_in_environment_or_docker_secrets("OPENAI_API_KEY")
-
-
-
 STRIPE_LIVE_MODE = False
 DJSTRIPE_WEBHOOK_SECRET = "whsec_xxx"  # We don't use this, but it must be set
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"

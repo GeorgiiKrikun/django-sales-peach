@@ -19,7 +19,7 @@ from djstripe.models import Product, Plan
 import stripe
 import os
 
-stripe.api_key = os.environ.get("STRIPE_TEST_SECRET_KEY")
+# stripe.api_key = os.environ.get("STRIPE_TEST_SECRET_KEY")
 
 
 
