@@ -16,9 +16,9 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from payments import get_payment_model, RedirectNeeded
 from djstripe.models import Product, Plan
+from djstripe import webhooks
 import stripe
 import os
-
 # stripe.api_key = os.environ.get("STRIPE_TEST_SECRET_KEY")
 
 
@@ -115,9 +115,6 @@ class PastRequestUpdateView(UpdateView):
     template_name_suffix = '_update_form'
 
     
-
-
-
 @login_required(login_url="authentication:login")
 def pages(request):
     context = {}
@@ -136,7 +133,6 @@ def pages(request):
         return HttpResponse(html_template.render(context, request))
 
     except template.TemplateDoesNotExist:
-
         html_template = loader.get_template('home/page-404.html')
         return HttpResponse(html_template.render(context, request))
 
@@ -144,4 +140,6 @@ def pages(request):
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
 
-
+@webhooks.handler("customer", "product", "price", "balance", "invoice", "checkout", "charge")
+def my_handler(event, **kwargs):
+    print("Triggered webhook " + event.type)
