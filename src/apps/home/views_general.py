@@ -19,7 +19,7 @@ from djstripe.models import Product, Plan
 from djstripe import webhooks
 import stripe
 import os
-# stripe.api_key = os.environ.get("STRIPE_TEST_SECRET_KEY")
+stripe.api_key = os.environ.get("STRIPE_TEST_SECRET_KEY")
 
 
 
@@ -140,6 +140,6 @@ def pages(request):
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
 
-@webhooks.handler("customer", "product", "price", "balance", "invoice", "checkout", "charge")
+@webhooks.handler_all
 def my_handler(event, **kwargs):
     print("Triggered webhook " + event.type)
