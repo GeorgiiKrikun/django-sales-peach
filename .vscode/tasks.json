@@ -1,0 +1,11 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+    {
+      "label": "Start stripe redirection",
+      "command": "stripe",
+      "args": ["listen", "--forward-to", "http://localhost:8000/stripe/webhook/", "--skip-verify"],
+      "isBackground": true,
+    }
+  ]
+}
