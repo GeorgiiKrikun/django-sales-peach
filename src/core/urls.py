@@ -14,7 +14,7 @@ urlpatterns = [
     path('payments/', include('payments.urls')),
     # Leave `Home.Urls` as last the last line
     path("speach/", include("speach.urls")),
-    path("finised_registration/", RedirectView.as_view(url='speach/finished_registration', permanent=False), name='index'),
+    path("finished_registration/", RedirectView.as_view(url='/speach/finished_registration', permanent=False)),
     path("", RedirectView.as_view(url='speach/', permanent=False), name='home'),
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
 ]
