@@ -1,0 +1,22 @@
+
+<section>
+  <p class="title">Pricing Plans</p>
+  <div class="columns">
+    {% for product in products %}
+      <div class="column">
+        <p class="subtitle">{{ product.name }}</p>
+        {% for plan in product.plan_set.all %}
+          <div>
+            <p class="heading">{{ plan.nickname }}</p>
+            <p>{{ plan.human_readable_price }}</p>
+          </div>
+          <form action="{% url 'speach:subscription_selected' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="price_id" value="{{ plan.id }}" />
+            <button type="submit">Checkout</button>
+          </form>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+</section>

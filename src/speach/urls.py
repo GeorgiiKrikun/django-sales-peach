@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from speach.views import companies, speach
+from speach.views import companies, speach, subscribe
 
 app_name = "speach"
 
@@ -15,6 +15,9 @@ urlpatterns = [
     path('finished_editing_company', companies.finished_edit_company , name='finished_editing_company'),
     path('add_company', companies.add_company , name='add_company'),
     path('finished_adding_company', companies.finished_adding_company , name='finished_adding_company'),
+    #Subscriptions
+    path('select_subscriptions', subscribe.select_subscriptions , name='select_subscriptions'),
+    path('subscription_selected', subscribe.subscription_selected , name='subscription_selected'),
     # #Payments
     # path('payments', payments.payments , name='payments'),
     # path('make_payment', payments.make_payment , name='make_payment'),
