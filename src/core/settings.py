@@ -52,13 +52,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djstripe',
-    'payments',
-    'apps.home',                                    # Enable the inner home (home)
-    'allauth',                                      # OAuth new
-    'allauth.account',                              # OAuth new
-    'allauth.socialaccount',                        # OAuth new 
-    'allauth.socialaccount.providers.github',       # OAuth new 
-    'allauth.socialaccount.providers.twitter',      # OAuth new  
+    # 'payments',
+    # 'apps.home',                                    # Enable the inner home (home)
+    'speach',
+    # 'allauth',                                      # OAuth new
+    # 'allauth.account',                              # OAuth new
+    # 'allauth.socialaccount',                        # OAuth new 
+    # 'allauth.socialaccount.providers.github',       # OAuth new 
+    # 'allauth.socialaccount.providers.twitter',      # OAuth new  
     "sslserver"    
 ]
 

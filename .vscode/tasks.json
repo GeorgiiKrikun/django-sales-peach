@@ -6,6 +6,11 @@
       "command": "stripe",
       "args": ["listen", "--forward-to", "http://localhost:8000/stripe/webhook/", "--skip-verify"],
       "isBackground": true,
+    },
+    {
+      "label": "reset database",
+      "command": "python3",
+      "args": ["manage.py", "reset_db", "--noinput"],
     }
   ]
 }

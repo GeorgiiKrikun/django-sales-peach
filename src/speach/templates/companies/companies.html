@@ -1,0 +1,51 @@
+{% comment %} {% extends "layouts/base.html" %} {% endcomment %}
+
+{% comment %} {% block title %} Speach {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %} {% endcomment %}
+
+
+<div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <div class="form-group">
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-12">
+                                <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                    <li><a class="nav-link text-left" id="add_new" href="{% url 'speach:add_company' %}" role="tab">Add New</a></li>
+                                    {% for company in companies %}
+                                        <li><a class="nav-link text-left" id="{{ company.id }}-tab" data-toggle="pill" href="#{{ company.id }}-text" role="tab" aria-controls="{{ company.name }}-tab" aria-selected="true">{{ company.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-md-9 col-sm-12">
+                                <div class="tab-content" id="v-pills-tabContent">
+                                    {% for company in companies %}
+                                        <div class="tab-pane fade" id="{{company.id}}-text" role="tabpanel" aria-labelledby="{{company.id}}-text">
+                                            <form action="{% url 'speach:edit_company'  %}" method="post">
+                                                {% csrf_token %}
+                                                <p class="mb-0">{{company.about}}</p>
+                                                <br>
+                                                <input type="submit" name="submit" value="Edit" />
+                                                <input type="submit" name="submit" value="Delete" />
+                                                <input type="hidden" name="company_id" value="{{company.id}}" />
+                                            </form>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% comment %} {% endblock content %}
+
+{% block javascripts %}{% endblock javascripts %} {% endcomment %}
