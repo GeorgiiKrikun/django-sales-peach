@@ -6,25 +6,26 @@ from django.template import loader
 from django.urls import reverse
 from django.utils import timezone
 import externals.openai as openai
-
+from django.shortcuts import redirect
+from djstripe.models import Customer
 
 @login_required(login_url="authentication:login")
 def finished_registration(request):
-    return HttpResponse("Finished registration")
+    if (UserData.objects.filter(user=request.user.pk).exists()):
+        return redirect("speach:speach")
+    current_user = request.user
+    userData = UserData()
+    userData.user = current_user
+    new_customer = Customer.create(current_user)
+    userData.customer = new_customer
+    userData.save()
+    return redirect("speach:speach")
 
 @login_required(login_url="authentication:login")
 def speach(request):
    
     current_user = request.user
     companies = Company.objects.filter(user_id=current_user.pk )
-    # if (UserData.objects.filter(user=current_user.pk).exists()): #TODO move that to registration
-    #     latest_company = UserData.objects.get(user=current_user.pk).latest_company
-    # else:
-    #     new_user_extended = UserData()
-    #     new_user_extended.user = current_user
-    #     new_user_extended.latest_company = companies.first()
-    #     new_user_extended.save()
-    #     latest_company = new_user_extended.latest_company
 
     user_extended = UserData.objects.get(user=current_user.pk)
     # last_used = user_extended.last_activity
