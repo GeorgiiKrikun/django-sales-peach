@@ -5,7 +5,7 @@
       "label": "Start stripe redirection",
       "command": "stripe",
       "args": ["listen", "--forward-to", "http://localhost:8000/stripe/webhook/", "--skip-verify"],
-      "isBackground": true,
+      // "isBackground": true,
     },
     {
       "label": "reset database",
