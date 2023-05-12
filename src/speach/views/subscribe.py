@@ -4,7 +4,7 @@ from django.template import loader
 from django.urls import reverse
 from djstripe.models import Product, Price, Customer, PaymentMethod
 from speach.models import UserData
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import stripe
 import os
 import logging
@@ -42,9 +42,14 @@ def subscription_selected(request):
         price = Price.objects.get(id=price_id)
         userData = UserData.objects.get(user=request.user.pk)
         customer = Customer.objects.get(id=userData.customer.id)
-        customer.subscribe(items=[{'price': price}])
 
-    return HttpResponseRedirect(select_subscriptions.url)
+        payment_methods_exists = PaymentMethod.objects.filter(customer=customer.id).exists()
+        if payment_methods_exists:
+            customer.subscribe(items=[{'price': price}])
+        else:
+            return redirect(reverse('speach:payment_methods'))
+
+    return redirect(reverse('speach:select_subscriptions'))
 
 @webhooks.handler('payment_method.attached')
 def payment_method_attached(event):

@@ -28,32 +28,12 @@ def speach(request):
     companies = Company.objects.filter(user_id=current_user.pk )
 
     user_extended = UserData.objects.get(user=current_user.pk)
-    # last_used = user_extended.last_activity
-
-    #check if last used was yesterday, if so reset requests today
-    # if (timezone.now() - last_used).days > 0 or last_used.day < timezone.now().day :
-    #     user_extended.requests_today = 0
-    #     user_extended.save()
-
-    # requests_today = user_extended.requests_today    
-    # max_requests_per_day = UserData.objects.get(user=current_user.pk).subscription_plan.requests_per_day
-    # if (requests_today >= max_requests_per_day):
-    #     html_template = loader.get_template('home/payments.html')
-    #     plans = PaymentPlans.objects.all().filter(available_to_select=True)
-    #     context = {'segment': 'payments',
-    #                'plans': plans}
-    #     return HttpResponse(html_template.render(context, request))
-
-
     context = {'segment': 'speach',
                'companies': companies,
-               'selected_company': latest_company}
+               'selected_company': "kak"}
 
     html_template = loader.get_template('speach/speach.html')
     return HttpResponse(html_template.render(context, request))
-
-# @login_required(login_url="authentication:login")
-# def finished_registration(request):
 
 
 @login_required(login_url="authentication:login")
@@ -69,8 +49,6 @@ def get_speach(request):
 
     extended_user = UserData.objects.get(user=current_user.pk)
     extended_user.latest_company = company
-    extended_user.requests_today = extended_user.requests_today + 1
-    extended_user.last_activity = timezone.now()
     extended_user.save()
 
     html_template = loader.get_template('speach/speach_result.html')
@@ -110,8 +88,8 @@ def retry_speach(request):
 
     extended_user = UserData.objects.get(user=current_user.pk)
     extended_user.latest_company = company
-    extended_user.requests_today = extended_user.requests_today + 1
-    extended_user.last_activity = timezone.now()
+    # extended_user.requests_today = extended_user.requests_today + 1
+    # extended_user.last_activity = timezone.now()
     extended_user.save()
 
     html_template = loader.get_template('speach/speach_result.html')
