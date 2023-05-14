@@ -27,8 +27,15 @@ def select_subscriptions(request):
     if (active_subscriptions.exists()):
         has_subscription=True
         subscription = active_subscriptions.first()
-    return render(request, 'subscriptions/select_subscriptions.html', {'products': Product.objects.all(),'segment': 'payments', 
-                                                                       'has_subscription': has_subscription, 'subscription': subscription})
+
+    context = {'products': []}
+    for product in Product.objects.filter(active=True):
+        context['products'].append({'product': product, 'prices': Price.objects.filter(product=product)})
+    context['segment'] = 'payments'
+    context['has_subscription'] = has_subscription
+    context['subscription'] = subscription
+    return render(request, 'subscriptions/select_subscriptions.html', context)
+
 @login_required(login_url="authentication:login")
 def change_subscription(request):
     active_subscription = get_active_subscriptions(request.user.pk).first()

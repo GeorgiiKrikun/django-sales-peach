@@ -3,7 +3,9 @@
 {% block title %} Speach {% endblock %} 
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ ASSETS_ROOT }}/css/payment_table.css">
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -11,15 +13,40 @@
 <div class="pcoded-main-container">
   <div class="pcoded-content">
       <p class="title">Pricing Plans</p>
-      <div class="columns">
         {% for product in products %}
+          <div class="columns">
+            <ul class='price' style="background-color: {{ product.product.metadata.background_color }};" >
+              <li style="font-size: 25px; color: #000000; font-weight: bold;">{{ product.product.name }}
+                <br><br>
+                {% for price in product.prices %}
+                <form action="{% url 'speach:subscription_selected' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="price_id" value="{{ price.id }}" />
+                    <button type="submit" class="btn btn-primary style">{{ price.human_readable_price }}</button>
+                </form>
+                {% endfor %}
+              </li>
+            </ul>
+          </div>
+
+          {% comment %} {% for price in product.price %}
+            
+              <li style="background-color: {{ product.metadata.background_color }}; font-size: 25px; color: #000000; font-weight: bold">{{ Product.name }}</li>
+              {% comment %} <li class="grey"><a href="{% url 'home:make_payment' %}?id={{ plan.id }}" class="button">Sign Up</a></li> {% endcomment %}
+              {% comment %} <p> {{ price.human_readable_price }} </p>
+            </ul> 
+           {% endcomment %}
+      {% endfor %}
+        {% comment %} {% for product in products %}
           <div class="column">
             <p class="subtitle">{{ product.name }}</p>
             {% for plan in product.plan_set.all %}
-              <div>
+            <div>
                 <p class="heading">{{ plan.nickname }}</p>
                 <p>{{ plan.human_readable_price }}</p>
               </div>
+
+
               {% if has_subscription %}
                 <form action="{% url 'speach:change_subscription' %}" method="POST">
                   {% csrf_token %}
@@ -35,7 +62,7 @@
               {% endif %}
             {% endfor %}
           </div>
-        {% endfor %}
+        {% endfor %} {% endcomment %}
       </div>
       {% if has_subscription %}
       <p>You are currently subscribed to {{ subscription.plan.product.name }} - {{ subscription.plan.human_readable_price}}</p>
@@ -49,6 +76,6 @@
 </div>
 
 
-  {% endblock content %}
+{% endblock content %}
 
 {% block javascripts %}{% endblock javascripts %}
