@@ -1,0 +1,59 @@
+<!-- [ navigation menu ] start -->
+<nav class="pcoded-navbar">
+    <div class="navbar-wrapper">
+        <div class="navbar-brand header-logo">
+            <a href="/" class="b-brand">
+                <div class="b-bg">
+                    <i class="feather icon-trending-up"></i>
+                </div>
+                <span class="b-title">Datta Able</span>
+            </a>
+            <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
+        </div>
+        <div class="navbar-content scroll-div">
+            <ul class="nav pcoded-inner-navbar">              
+                <li class="nav-item pcoded-menu-caption">
+                    <label>Sales pitch</label>
+                </li> 
+                <li data-username="Speach" 
+                    class="nav-item {% if 'speach' in segment %} active {% endif %}">
+                <a href="{% url 'speach:speach' %}" class="nav-link">
+                    <span class="pcoded-micon"><i class="feather icon-message-circle"></i></span>
+                        <span class="pcoded-mtext">Speach</span></a>
+                </li>     
+                <li data-username="Subscriptions" 
+                class="nav-item {% if 'payments' in segment %} active {% endif %}">
+                <a href="{% url 'speach:select_subscriptions' %}" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-message-circle"></i></span>
+                    <span class="pcoded-mtext">Payments</span></a>
+                </li>        
+                <li data-username="Companies" 
+                    class="nav-item {% if 'companies' in segment %} active {% endif %}">
+                <a href="{% url 'speach:companies' %}" class="nav-link">
+                    <span class="pcoded-micon"><i class="feather icon-briefcase"></i></span>
+                        <span class="pcoded-mtext">Companies</span></a>
+                </li>        
+            
+``
+   
+                <li class="nav-item pcoded-menu-caption">
+                    <label>More Resources</label>
+                </li>                    
+                <li data-username="Support Page" class="nav-item ">
+                    <a target="_blank" href="/feedback" class="nav-link">
+                        <span class="pcoded-micon">
+                            <i class="feather icon-headphones"></i>
+                        </span>
+                        <span class="pcoded-mtext">Support</span>
+                    </a>
+                </li>
+                <li data-username="Logout" class="nav-item">
+                    <a href="{% url 'authentication:logout' %}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-power"></i></span><span class="pcoded-mtext">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- [ navigation menu ] end -->

@@ -1,0 +1,20 @@
+{% extends "general/base.html" %}
+
+{% block title %} Speach {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div class="pcoded-main-container">
+  <div class="pcoded-content">
+    {% for p in plans %}
+        <p> {{ p.id }} </p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock content %}
+{% block javascripts %}{% endblock javascripts %}

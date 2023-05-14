@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djstripe',
+    'apps.authentication',
     # 'payments',
     # 'apps.home',                                    # Enable the inner home (home)
     'speach',

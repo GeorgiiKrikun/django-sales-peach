@@ -1,22 +1,54 @@
+{% extends "general/base.html" %}
 
-<section>
-  <p class="title">Pricing Plans</p>
-  <div class="columns">
-    {% for product in products %}
-      <div class="column">
-        <p class="subtitle">{{ product.name }}</p>
-        {% for plan in product.plan_set.all %}
-          <div>
-            <p class="heading">{{ plan.nickname }}</p>
-            <p>{{ plan.human_readable_price }}</p>
+{% block title %} Speach {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div class="pcoded-main-container">
+  <div class="pcoded-content">
+      <p class="title">Pricing Plans</p>
+      <div class="columns">
+        {% for product in products %}
+          <div class="column">
+            <p class="subtitle">{{ product.name }}</p>
+            {% for plan in product.plan_set.all %}
+              <div>
+                <p class="heading">{{ plan.nickname }}</p>
+                <p>{{ plan.human_readable_price }}</p>
+              </div>
+              {% if has_subscription %}
+                <form action="{% url 'speach:change_subscription' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="price_id" value="{{ plan.id }}" />
+                  <button type="submit">Change</button>
+                </form>
+              {% else %}
+                <form action="{% url 'speach:subscription_selected' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="price_id" value="{{ plan.id }}" />
+                    <button type="submit">Checkout</button>
+                </form>
+              {% endif %}
+            {% endfor %}
           </div>
-          <form action="{% url 'speach:subscription_selected' %}" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="price_id" value="{{ plan.id }}" />
-            <button type="submit">Checkout</button>
-          </form>
         {% endfor %}
       </div>
-    {% endfor %}
+      {% if has_subscription %}
+      <p>You are currently subscribed to {{ subscription.plan.product.name }} - {{ subscription.plan.human_readable_price}}</p>
+      <p>Next payment due on {{ subscription.current_period_end }}</p>
+      <form action="{% url 'speach:confirm_subscription_cancel' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit">Cancel Subscription</button>
+      </form>
+      {% endif %}
   </div>
-</section>
+</div>
+
+
+  {% endblock content %}
+
+{% block javascripts %}{% endblock javascripts %}

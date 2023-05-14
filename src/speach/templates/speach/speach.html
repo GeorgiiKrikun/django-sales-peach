@@ -1,11 +1,11 @@
-{% comment %} {% extends "layouts/base.html" %} {% endcomment %}
+{% extends "general/base.html" %}
 
-{% comment %} {% block title %} Speach {% endblock %}  {% endcomment %}
+{% block title %} Speach {% endblock %} 
 
 <!-- Specific CSS goes HERE -->
-{% comment %} {% block stylesheets %}{% endblock stylesheets %} {% endcomment %}
+{% block stylesheets %}{% endblock stylesheets %}
 
-{% comment %} {% block content %} {% endcomment %}
+{% block content %}
 
 
 <div class="pcoded-main-container">
@@ -26,6 +26,6 @@
     </div> 
 </div>
 
-{% comment %} {% endblock content %} {% endcomment %}
+{% endblock content %}
 
-{% comment %} {% block javascripts %}{% endblock javascripts %} {% endcomment %}
+{% block javascripts %}{% endblock javascripts %}

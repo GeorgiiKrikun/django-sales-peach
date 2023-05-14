@@ -30,7 +30,7 @@ def login_view(request):
         else:
             msg = 'Error validating the form'
 
-    html_template = loader.get_template('accounts/login.html')
+    html_template = loader.get_template('authentication/login.html')
     context = {"form": form, "msg": msg, "GITHUB_AUTH": GITHUB_AUTH}
     return HttpResponse(html_template.render(context, request))
 
@@ -65,4 +65,7 @@ def register_user(request):
     else:
         form = SignUpForm()
 
-    return render(request, "accounts/register.html", {"form": form, "msg": msg, "success": success})
+    return render(request, "authentication/register.html", {"form": form, "msg": msg, "success": success})
+
+def reset_password(request):
+    return render(request, "authentication/auth-reset-password.html", {})

@@ -19,6 +19,10 @@ urlpatterns = [
     path('select_subscriptions', subscribe.select_subscriptions , name='select_subscriptions'),
     path('subscription_selected', subscribe.subscription_selected , name='subscription_selected'),
     path('payment_methods', subscribe.payment_methods , name='payment_methods'),
+    path('cancel_subscription', subscribe.cancel_subscription , name='cancel_subscription'),
+    path('confirm_subscription_cancel', subscribe.confirm_subscription_cancel , name='confirm_subscription_cancel'),
+    path('change_subscription', subscribe.change_subscription , name='change_subscription'),
+    # path('active_subscriptions', subscribe.active_subscriptions , name='active_subscriptions'),
     
     # #Payments
     # path('payments', payments.payments , name='payments'),

@@ -1,0 +1,30 @@
+{% extends "general/base.html" %}
+
+{% block title %} Speach {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div class="pcoded-main-container">
+  <div class="pcoded-content">
+    <p> Note: if you intend to switch subscription, it is better to do it with subscription change, this way you will not lose your money.
+        otherwise, any outstanding subscription time will be lost!  </p>
+    <p> Otherwise, you still will be able to use the service until the end of your subscription time. We are sorry that you were not satisfied with 
+        our services. Care to leave us a feedback?</p>
+    <p> If you are sure canceling subscription is what you want, please click the button below. </p>
+    <form action={% url "speach:cancel_subscription" %} method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Cancel Subscription</button>
+    </form>
+    <form action={% url "speach:select_subscriptions" %} method="get">
+      <button type="submit" class="btn btn-primary">Go Back </button>
+    </form>
+  </div>
+
+</div>
+
+{% endblock content %}
+{% block javascripts %}{% endblock javascripts %}
