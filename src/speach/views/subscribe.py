@@ -2,13 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-from djstripe.models import Product, Price, Customer, PaymentMethod, Subscription
+from djstripe.models import Product, Price, Customer, PaymentMethod, Subscription, SubscriptionItem
 from speach.models import UserData
 from django.shortcuts import render, redirect
 import stripe
 import os
 import logging
 from djstripe import webhooks
+import time
 
 logger=logging.getLogger(__name__)
 
@@ -27,13 +28,18 @@ def select_subscriptions(request):
     if (active_subscriptions.exists()):
         has_subscription=True
         subscription = active_subscriptions.first()
-
+    if active_subscriptions.count() > 1:
+        raise Exception("User has more than one active subscription")
+    
     context = {'products': []}
     for product in Product.objects.filter(active=True):
-        context['products'].append({'product': product, 'prices': Price.objects.filter(product=product)})
+        context['products'].append({'product': product, 'prices': Price.objects.filter(product=product ).filter(active=True)})
+
     context['segment'] = 'payments'
     context['has_subscription'] = has_subscription
-    context['subscription'] = subscription
+    if has_subscription:
+        context['active_price'] = SubscriptionItem.objects.get(subscription=subscription.id).price
+        context['active_product'] = context['active_price'].product
     return render(request, 'subscriptions/select_subscriptions.html', context)
 
 @login_required(login_url="authentication:login")
@@ -54,6 +60,7 @@ def change_subscription(request):
                 'price': price_id,
             }]
         )
+        time.sleep(2)
     return redirect(reverse('speach:select_subscriptions'), context = {'segment': 'payments'})
 
 
@@ -113,7 +120,7 @@ def subscription_selected(request):
             customer.subscribe(items=[{'price': price}])
         else:
             return redirect(reverse('speach:payment_methods'))
-
+    time.sleep(2)
     return redirect(reverse('speach:select_subscriptions'), context = {'segment': 'payments'})
 
 @webhooks.handler('payment_method.attached')
