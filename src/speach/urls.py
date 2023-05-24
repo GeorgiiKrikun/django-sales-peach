@@ -31,10 +31,6 @@ urlpatterns = [
     # #Speach
     path('', speach.speach, name='speach'),
     path('speach', speach.speach, name='speach'),
-    path('get_speach', speach.get_speach, name='get_speach'),
-    path('retry_speach', speach.retry_speach, name='retry_speach'),
-    path('speach_result', speach.speach_result , name='speach_result'),
-    path('finished_registration', speach.finished_registration , name='finished_registration'),
     # #Feedback
     # path('feedback', feedback.feedback , name='feedback'),
     # path('submit_feedback', feedback.submit_feedback , name='submit_feedback'),

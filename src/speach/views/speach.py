@@ -6,8 +6,10 @@ from django.template import loader
 from django.urls import reverse
 from django.utils import timezone
 import externals.openai as openai
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from djstripe.models import Customer
+from ..forms import PastRequestForm
+from ..forms import operation_modes
 
 @login_required(login_url="authentication:login")
 def finished_registration(request):
@@ -23,96 +25,38 @@ def finished_registration(request):
 
 @login_required(login_url="authentication:login")
 def speach(request):
-   
-    current_user = request.user
-    companies = Company.objects.filter(user_id=current_user.pk )
-
-    user_extended = UserData.objects.get(user=current_user.pk)
-    context = {'segment': 'speach',
-               'companies': companies,
-               'selected_company': "kak"}
-
-    html_template = loader.get_template('speach/speach.html')
-    return HttpResponse(html_template.render(context, request))
-
-
-@login_required(login_url="authentication:login")
-def get_speach(request):
+    user = request.user
     if request.method == 'POST':
-        print("POST " + str(request.POST))
+        operation_mode = operation_modes[request.POST.get('operation_mode')]
+        if operation_mode == operation_modes.CREATE:
+            form = PastRequestForm(request.POST, user=user)
+            if form.is_valid():
+                past_request = form.save(commit=False)
+                response = create_result_based_on_past_request(past_request)
+                past_request.response = response
+                past_request.save()
+            else:
+                raise ValueError("Form is not valid")
+            result_form = PastRequestForm(instance=past_request, user=user, operation_mode=operation_modes.VIEW)
+            return render(request,'speach/speach.html', {'form':result_form, 'operation_mode': str(operation_modes.VIEW), 'id':past_request.id})  
+        elif operation_mode == operation_modes.VIEW:
+            id = request.POST.get('id') 
+            past_request = PastRequest.objects.get(id=id)
+            new_temperature = min(1, past_request.temperature + 0.2)
+            response = create_result_based_on_past_request(past_request, new_temperature)
+            past_request.temperature = new_temperature
+            past_request.response = response
+            past_request.save()
+            result_form = PastRequestForm(instance=past_request, user=user, operation_mode=operation_modes.VIEW)
+            return render(request,'speach/speach.html', {'form':result_form, 'operation_mode': str(operation_modes.VIEW), 'id':past_request.id})
+    else:
+        form = PastRequestForm(operation_mode = operation_modes.CREATE, user=user)
+    return render(request, 'speach/speach.html', {'form': form, 'operation_mode': str(operation_modes.CREATE)})
 
-    company_id = request.POST['CompanySelection']
-    current_user = request.user
+def create_result_based_on_past_request(past_request: PastRequest, temperature = 0):
+    company_id = past_request.company.id
+    current_user = past_request.user
     company = Company.objects.get(id=company_id)
-
-    temperature = 0
-
-    extended_user = UserData.objects.get(user=current_user.pk)
-    extended_user.latest_company = company
-    extended_user.save()
-
-    html_template = loader.get_template('speach/speach_result.html')
-    
-    response = openai.get_openai_response(company.name, company.about, request.POST['AboutInput'], temperature)
-
-    saved_request = PastRequest()
-    saved_request.user = current_user
-    saved_request.company = company
-    saved_request.about = request.POST["AboutInput"]
-    saved_request.response = response
-    saved_request.temperature = temperature
-    saved_request.save()
-
-    context = {
-               'segment': 'speach', 
-               'PastRequest': saved_request,
-               'About': request.POST['AboutInput']
-              }
-
-    return HttpResponse(html_template.render(context, request))
-
-
-
-@login_required(login_url="authentication:login")
-def retry_speach(request):
-    if request.method == 'POST':
-        print("POST " + str(request.POST))  
-    #Get past request object from id 
-    past_requst = PastRequest.objects.get( id=request.POST['past_request_id'] )
-        
-
-    current_user = request.user
-    company = past_requst.company
-
-    temperature = min(past_requst.temperature + 0.5, 1.0)
-
-    extended_user = UserData.objects.get(user=current_user.pk)
-    extended_user.latest_company = company
-    # extended_user.requests_today = extended_user.requests_today + 1
-    # extended_user.last_activity = timezone.now()
-    extended_user.save()
-
-    html_template = loader.get_template('speach/speach_result.html')
-    
-    response = openai.get_openai_response(company.name, company.about, request.POST['past_about'], temperature)
-
-    saved_request = PastRequest()
-    saved_request.user = current_user
-    saved_request.company = company
-    saved_request.response = response
-    saved_request.temperature = temperature
-    saved_request.save()
-
-    context = {
-               'segment': 'speach', 
-               'PastRequest': saved_request,
-               'About': request.POST['past_about']
-              }
-
-    return HttpResponse(html_template.render(context, request))
-
-@login_required(login_url="authentication:login")
-def speach_result(request):
-    if request.method == 'POST':
-        print("POST " + str(request.POST['AboutInput']))
-    return HttpResponseRedirect(reverse('speach:speach', args=()))
+    user_data = UserData.objects.get(user=current_user.pk)
+    response = openai.get_openai_response(company.name, company.about, past_request.request, temperature)
+    return response

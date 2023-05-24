@@ -9,23 +9,25 @@
 
 
 <div class="pcoded-main-container">
-    <div class="pcoded-content">
-        <form action="{% url 'speach:get_speach'  %}" method="post">
-            {% csrf_token %}
-            <label for="company_description">Write something about the company here:</label>
-            <textarea name="AboutInput" class="form-control" id="company_description" rows="3"></textarea>
-            </textarea></br>
-            <label for="company_select">Select company:</label>
-            <select name="CompanySelection" class="form-control" id="company_select">
-                {% for company in companies %}
-                    <option value={{company.id}} {% if selected_company == company %} selected {% endif %} > {{company.name}} </option>
-                {% endfor %}
-            </select>
-            <input type="submit" name="Submit" value="Get result" />
-        </form>
-    </div> 
+  <div class="pcoded-content">
+    {{ form.non_field_errors }}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.company.label_tag }} {{ form.company }} {{ form.errors }}
+        {{ form.request.label_tag }} {{ form.request }} {{ form.errors }}
+        {% if operation_mode == "CREATE" %}
+        <br><button type="submit" class="btn btn-primary"> Go </button>
+        {% elif operation_mode  == "VIEW" %}
+          {{ form.response.label_tag }} {{ form.response }} {{ form.errors }}
+          <br><button type="submit" class="btn btn-primary"> Regenerate </button>
+        {% endif %}
+        <input type="hidden" name="operation_mode" value="{{ operation_mode }}">
+        <input type="hidden" name="id" value="{{ id }}">
+        
+        
+      </form>
+  </div>
 </div>
 
 {% endblock content %}
-
 {% block javascripts %}{% endblock javascripts %}
