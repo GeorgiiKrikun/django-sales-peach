@@ -13,31 +13,26 @@ class operation_modes(Enum):
     def __str__(self) -> str:
         return self.name
 
+class CompanyForm(ModelForm):
+    class Meta:
+        model = Company
+        fields = ['name', 'about']
 
-class PastRequestForm_Create(ModelForm):
     def __init__(self, *args, **kwargs) -> None:
+        operation_mode = kwargs.pop("operation_mode", operation_modes.VIEW)
+        assert operation_mode in operation_modes, f"Invalid operation mode {operation_mode}"
         self.user = kwargs.pop("user", None)
         assert self.user is not None, "User must be provided"
+
         super().__init__(*args, **kwargs)
-        
-        self.fields['company'].widget = Select(
-            attrs={
-                "class": "form-control",
-                "id": "company_name",
-            },
-        )
-        
-        self.fields['request'].widget = Textarea(
+        self.fields['name'].widget = TextInput(
             attrs={
                 "placeholder": "Write here something about the company you are writing to",
-                "name":"AboutInput",
+                "name":"name",
                 "class":"form-control",
-                "id":"company_description",
-                "rows":"3",
-            }
-        )
-
-        self.fields['response'].widget = Textarea(
+                "id":"company_name",
+            })
+        self.fields['about'].widget = Textarea(
             attrs={
                 "name":"response",
                 "class":"form-control",
@@ -45,15 +40,18 @@ class PastRequestForm_Create(ModelForm):
                 "rows":"5",
             }
         )
-        
-        self.fields['company'].queryset = Company.objects.filter(user_id=self.user.pk)
+
+        if operation_mode == operation_modes.VIEW:
+            for field in [f for f in self.fields if f is not None]:
+                self.fields[field].widget.attrs['disabled'] = True
+
 
     
     def save(self, commit=True):
         req = super().save(commit=False)
         req.user = self.user
         if commit:
-            req.save(commit=True)
+            req.save()
         return req
 
 class PastRequestForm(ModelForm):
@@ -80,8 +78,6 @@ class PastRequestForm(ModelForm):
                 "id": "company_name",
             },
         )
-
-
 
         self.fields['request'].widget = Textarea(
             attrs={

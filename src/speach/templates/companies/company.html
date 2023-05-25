@@ -1,0 +1,32 @@
+{% extends "general/base.html" %}
+
+{% block title %} Speach {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div class="pcoded-main-container">
+  <div class="pcoded-content">
+    {{ form.non_field_errors }}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.name.label_tag }} {{ form.name }} 
+        {{ form.about.label_tag }} {{ form.about }}
+        {% if operation_mode == "CREATE" %}
+        <br><button type="submit" class="btn btn-primary"> Save </button>
+        {% elif operation_mode == "UPDATE" %}
+        <br><button type="submit" class="btn btn-primary"> Update </button>
+        {% endif %}
+        {{ form.errors }}
+        <input type="hidden" name="submit" value="Save">
+        <input type="hidden" name="operation_mode" value="{{ operation_mode }}">
+        <input type="hidden" name="company_id" value="{{ id }}">
+    </form>
+  </div>
+</div>
+
+{% endblock content %}
+{% block javascripts %}{% endblock javascripts %}

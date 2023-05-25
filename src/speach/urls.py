@@ -12,6 +12,7 @@ urlpatterns = [
     # #Companies
     path('companies', companies.companies , name='companies'),
     path('edit_company', companies.edit_company , name='edit_company'),
+    path('company', companies.company , name='company'),
     path('finished_editing_company', companies.finished_edit_company , name='finished_editing_company'),
     path('add_company', companies.add_company , name='add_company'),
     path('finished_adding_company', companies.finished_adding_company , name='finished_adding_company'),

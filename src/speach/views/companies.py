@@ -3,6 +3,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from ..models import Company
 from django.template import loader
 from django.urls import reverse
+from django.shortcuts import redirect, render
+from ..forms import operation_modes, CompanyForm
+
 
 @login_required(login_url="authentication:login")
 def edit_company(request):
@@ -16,6 +19,44 @@ def edit_company(request):
         company.about = request.POST['']
         company.save()
         return HttpResponseRedirect(reverse('speach:companies'))
+    
+@login_required(login_url="authentication:login")
+def company(request):
+    if request.method == 'POST':
+        user = request.user
+        if request.POST['submit'] == 'Create':
+            form = CompanyForm(user=user, operation_mode=operation_modes.CREATE)
+            return render(request, 'companies/company.html', {'form': form, 'operation_mode': str(operation_modes.CREATE),
+                                                              'id': -1})
+        elif request.POST['submit'] == 'Edit':
+            id = request.POST['company_id']
+            company = Company.objects.get(id=id)
+            form = CompanyForm(instance = company, user=user, operation_mode=operation_modes.UPDATE)
+            return render(request, 'companies/company.html', {'form': form, 'operation_mode': str(operation_modes.UPDATE),
+                                                              'id': id})
+        elif request.POST['submit'] == 'Save':
+            if Company.objects.filter(id=request.POST['company_id']).exists():
+                company = Company.objects.get(id=request.POST['company_id'])
+            else:
+                company = Company()
+
+            form = CompanyForm(request.POST, user=user, instance = company)
+            if form.is_valid():
+                company = form.save(commit=True)
+                company.save()
+                return redirect(reverse('speach:companies'))
+            else:
+                raise ValueError("Form is not valid")
+        elif request.POST['submit'] == 'Delete':
+            company = Company.objects.get(id=request.POST['company_id'])
+            company.delete()
+            return redirect(reverse('speach:companies'))
+        else:
+            raise ValueError("Unknown submit value")
+        
+    return redirect(reverse('speach:companies'))
+    
+
 
 
 @login_required(login_url="authentication:login")

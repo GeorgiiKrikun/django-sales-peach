@@ -17,7 +17,14 @@
                         <div class="row">
                             <div class="col-md-3 col-sm-12">
                                 <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                    <li><a class="nav-link text-left" id="add_new" href="{% url 'speach:add_company' %}" role="tab">Add New</a></li>
+                                    <li>
+                                        <form method="post" action={% url 'speach:company'%}>
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-secondary"> Add new </button>
+                                            <input type="hidden" name="submit" value="Create" />
+                                        </form>
+                                    </li>
+
                                     {% for company in companies %}
                                         <li><a class="nav-link text-left" id="{{ company.id }}-tab" data-toggle="pill" href="#{{ company.id }}-text" role="tab" aria-controls="{{ company.name }}-tab" aria-selected="true">{{ company.name }}</a></li>
                                     {% endfor %}
@@ -27,7 +34,7 @@
                                 <div class="tab-content" id="v-pills-tabContent">
                                     {% for company in companies %}
                                         <div class="tab-pane fade" id="{{company.id}}-text" role="tabpanel" aria-labelledby="{{company.id}}-text">
-                                            <form action="{% url 'speach:edit_company'  %}" method="post">
+                                            <form action="{% url 'speach:company'  %}" method="post">
                                                 {% csrf_token %}
                                                 <p class="mb-0">{{company.about}}</p>
                                                 <br>
