@@ -23,6 +23,7 @@ urlpatterns = [
     path('cancel_subscription', subscribe.cancel_subscription , name='cancel_subscription'),
     path('confirm_subscription_cancel', subscribe.confirm_subscription_cancel , name='confirm_subscription_cancel'),
     path('change_subscription', subscribe.change_subscription , name='change_subscription'),
+    
     # path('active_subscriptions', subscribe.active_subscriptions , name='active_subscriptions'),
     
     # #Payments
@@ -32,6 +33,7 @@ urlpatterns = [
     # #Speach
     path('', speach.speach, name='speach'),
     path('speach', speach.speach, name='speach'),
+    path('finished_registration', speach.finished_registration , name='finished_registration'),
     # #Feedback
     # path('feedback', feedback.feedback , name='feedback'),
     # path('submit_feedback', feedback.submit_feedback , name='submit_feedback'),
