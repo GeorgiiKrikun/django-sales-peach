@@ -1,27 +1,13 @@
-from django import template
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
 from ..models import Company, PastRequest, UserData
-from django.template import loader
 from django.urls import reverse
-from django.utils import timezone
 import externals.openai as openai
 from django.shortcuts import redirect, render
-from djstripe.models import Customer
 from ..forms import PastRequestForm
 from ..forms import operation_modes
 
-@login_required(login_url="authentication:login")
-def finished_registration(request):
-    if (UserData.objects.filter(user=request.user.pk).exists()):
-        return redirect("speach:speach")
-    current_user = request.user
-    userData = UserData()
-    userData.user = current_user
-    new_customer = Customer.create(current_user)
-    userData.customer = new_customer
-    userData.save()
-    return redirect("speach:speach")
+
+
 
 @login_required(login_url="authentication:login")
 def speach(request):

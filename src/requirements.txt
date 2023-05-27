@@ -14,3 +14,4 @@ django-sslserver
 dj-stripe
 django-payments
 openai
+six

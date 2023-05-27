@@ -19,9 +19,9 @@ class UserData(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
     latest_company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
-    
+    email_confirmed = models.BooleanField(default=False) #NOT NEEDED TODO: REMOVE
     def __str__(self):
-        return self.user.username
+        return self.user.username + " " + self.email_confirmed
 
 class PastRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

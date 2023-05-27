@@ -44,6 +44,17 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', 'https://www.
 
 # Application definition
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  
+EMAIL_FROM = 'salespeachgmbh@gmail.com'
+EMAIL_USE_TLS = True  
+EMAIL_PORT = 587  
+EMAIL_HOST_USER = 'salespeachgmbh@gmail.com'  
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")  
+
+PASSWORD_RESET_TIMEOUT = 14400
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

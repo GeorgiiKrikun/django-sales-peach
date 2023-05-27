@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from speach.views import companies, speach, subscribe
+from speach.views import companies, speach, subscribe, registration
 
 app_name = "speach"
 
@@ -24,32 +24,14 @@ urlpatterns = [
     path('confirm_subscription_cancel', subscribe.confirm_subscription_cancel , name='confirm_subscription_cancel'),
     path('change_subscription', subscribe.change_subscription , name='change_subscription'),
     
-    # path('active_subscriptions', subscribe.active_subscriptions , name='active_subscriptions'),
-    
-    # #Payments
-    # path('payments', payments.payments , name='payments'),
-    # path('make_payment', payments.make_payment , name='make_payment'),
-    # path('complete_payment', payments.complete_payment, name='complete_payment'),
     # #Speach
     path('', speach.speach, name='speach'),
     path('speach', speach.speach, name='speach'),
-    path('finished_registration', speach.finished_registration , name='finished_registration'),
+
+    # #Registration
+    path('finished_registration', registration.finished_registration , name='finished_registration'),
     # #Feedback
     # path('feedback', feedback.feedback , name='feedback'),
     # path('submit_feedback', feedback.submit_feedback , name='submit_feedback'),
-    # # Test stuff
-    # path('company_test_view', views_general.CompaniesListView.as_view(), name='company_test_view'),
-    # path('past_req_update/<int:pk>', views_general.PastRequestUpdateView.as_view(), name='company_test_view'),
-    # path('payment_details/<int:payment_id>', views_general.payment_details, name='payment_details'),
-    # path('payment_success', views_general.payment_success, name='payment_success'),
-    # path('payment_failure', views_general.payment_failure, name='payment_failure'),
-    # # Stripe test stuff
-    # path('select_subscriptions', views_general.select_subscriptions, name='select_subscriptions'),
-    # path('subscription_selected', views_general.subscription_selected, name='subscription_selected'),
-    # path('subscription_success', views_general.subscription_success, name='subscription_success'),
-    # path('subscription_failure', views_general.subscription_failure, name='subscription_failure'),
-
-    # # Matches any html file
-    # re_path(r'^.*\.*', views_general.pages, name='pages'),
 
 ]
