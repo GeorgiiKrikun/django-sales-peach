@@ -44,6 +44,17 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', 'https://www.
 
 # Application definition
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  
+EMAIL_FROM = 'salespeachgmbh@gmail.com'
+EMAIL_USE_TLS = True  
+EMAIL_PORT = 587  
+EMAIL_HOST_USER = 'salespeachgmbh@gmail.com'  
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")  
+
+PASSWORD_RESET_TIMEOUT = 14400
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -52,13 +63,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djstripe',
-    'payments',
-    'apps.home',                                    # Enable the inner home (home)
-    'allauth',                                      # OAuth new
-    'allauth.account',                              # OAuth new
-    'allauth.socialaccount',                        # OAuth new 
-    'allauth.socialaccount.providers.github',       # OAuth new 
-    'allauth.socialaccount.providers.twitter',      # OAuth new  
+    'apps.authentication',
+    # 'payments',
+    # 'apps.home',                                    # Enable the inner home (home)
+    'speach',
+    # 'allauth',                                      # OAuth new
+    # 'allauth.account',                              # OAuth new
+    # 'allauth.socialaccount',                        # OAuth new 
+    # 'allauth.socialaccount.providers.github',       # OAuth new 
+    # 'allauth.socialaccount.providers.twitter',      # OAuth new  
     "sslserver"    
 ]
 

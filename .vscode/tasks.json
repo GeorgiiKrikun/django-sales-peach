@@ -1,11 +1,25 @@
 {
     "version": "2.0.0",
     "tasks": [
-    {
-      "label": "Start stripe redirection",
-      "command": "stripe",
-      "args": ["listen", "--forward-to", "http://localhost:8000/stripe/webhook/", "--skip-verify"],
-      "isBackground": true,
-    }
-  ]
+      {
+        "label": "Start stripe redirection",
+        "command": "stripe",
+        "args": [
+          "listen",
+          "--forward-to",
+          "http://localhost:8000/stripe/webhook/",
+          "--skip-verify"
+        ],
+        "problemMatcher": []
+      },
+      {
+        "label": "reset database",
+        "command": "python3",
+        "args": [
+          "manage.py",
+          "reset_db",
+          "--noinput"
+        ]
+      }
+    ]
 }

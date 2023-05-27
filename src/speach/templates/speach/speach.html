@@ -1,0 +1,33 @@
+{% extends "general/base.html" %}
+
+{% block title %} Speach {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div class="pcoded-main-container">
+  <div class="pcoded-content">
+    {{ form.non_field_errors }}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.company.label_tag }} {{ form.company }} {{ form.errors }}
+        {{ form.request.label_tag }} {{ form.request }} {{ form.errors }}
+        {% if operation_mode == "CREATE" %}
+        <br><button type="submit" class="btn btn-primary"> Go </button>
+        {% elif operation_mode  == "VIEW" %}
+          {{ form.response.label_tag }} {{ form.response }} {{ form.errors }}
+          <br><button type="submit" class="btn btn-primary"> Regenerate </button>
+        {% endif %}
+        <input type="hidden" name="operation_mode" value="{{ operation_mode }}">
+        <input type="hidden" name="id" value="{{ id }}">
+        
+        
+      </form>
+  </div>
+</div>
+
+{% endblock content %}
+{% block javascripts %}{% endblock javascripts %}
