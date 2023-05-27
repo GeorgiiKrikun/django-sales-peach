@@ -112,7 +112,7 @@ STRIPE_TEST_PUBLIC_KEY = search_in_environment_or_docker_secrets("STRIPE_TEST_PU
 STRIPE_TEST_SECRET_KEY = search_in_environment_or_docker_secrets("STRIPE_TEST_SECRET_KEY")
 openai.api_key = search_in_environment_or_docker_secrets("OPENAI_API_KEY")
 STRIPE_LIVE_MODE = False
-DJSTRIPE_WEBHOOK_SECRET = "whsec_8e9b6ec2be0824da66554932c498689fc7fe821d48bda6078b465eddc97d7b83"  # We don't use this, but it must be set
+DJSTRIPE_WEBHOOK_SECRET = os.getenv('DJSTRIPE_WEBHOOK_SECRET','NO_SECRETS')  # We don't use this, but it must be set
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 
 
