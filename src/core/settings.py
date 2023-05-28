@@ -114,6 +114,8 @@ openai.api_key = search_in_environment_or_docker_secrets("OPENAI_API_KEY")
 STRIPE_LIVE_MODE = False
 DJSTRIPE_WEBHOOK_SECRET = os.getenv('DJSTRIPE_WEBHOOK_SECRET','NO_SECRETS')  # We don't use this, but it must be set
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
+if DEBUG:
+    DJSTRIPE_WEBHOOK_VALIDATION = 'retrieve_event'
 
 
 WSGI_APPLICATION = 'core.wsgi.application'

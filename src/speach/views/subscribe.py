@@ -73,10 +73,11 @@ def confirm_subscription_cancel(request):
 @login_required(login_url="authentication:login")
 def payment_methods(request):
     if request.method == 'GET':
+        domain = request.get_host()
         userData = UserData.objects.get(user=request.user.pk)
         session = stripe.checkout.Session.create(
-            success_url='http://127.0.0.1:8000/speach/select_subscriptions',
-            cancel_url='http://127.0.0.1:8000/speach/',
+            success_url=f'http://{domain}/speach/select_subscriptions',
+            cancel_url=f'http://{domain}/speach/',
             mode='setup',
             customer=userData.customer.id,
             currency='eur',
