@@ -3,6 +3,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+from typing import Any, Dict
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -29,27 +30,39 @@ class EnterEmailForPasswordResetForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
-                "placeholder": "Email",
+                "placeholder": "email@provider.com",
                 "class": "form-control"
             }
-        ))
+        ),
+        label="Enter your email")
     
 class ResetPasswordForm(forms.Form):
+    error_messages = {
+        'password_mismatch': 'The two password fields didn’t match.',
+    }
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
                 "placeholder": "Password",
                 "class": "form-control"
             }
-        ))
+        ),
+        label="Enter the new password"
+    )
+    password1.validators = [password_validation.validate_password]
+
     password2 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
                 "placeholder": "Password check",
                 "class": "form-control"
             }
-        ))
-    def clean_password2(self):
+        ),
+        label="Confirm the new password"
+        )
+
+
+    def clean(self) -> Dict[str, Any]:
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
@@ -57,18 +70,9 @@ class ResetPasswordForm(forms.Form):
                 self.error_messages['password_mismatch'],
                 code='password_mismatch',
             )
-        return password2
+        return super().clean()
 
-    def _post_clean(self):
-        super()._post_clean()
-        # Validate the password after self.instance is updated with form data
-        # by super().
-        password = self.cleaned_data.get('password2')
-        if password:
-            try:
-                password_validation.validate_password(password)
-            except ValidationError as error:
-                self.add_error('password2', error)
+
 
 
 class SignUpForm(UserCreationForm):
