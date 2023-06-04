@@ -14,7 +14,5 @@ def finished_registration(request):
     new_customer = Customer.create(current_user)
     userData.customer = new_customer
     userData.save()
-    messages.add_message(request, messages.INFO, 'You have successfully registered! To get access to full functionality,\
-                        please confirm the e-mail address you provided.')
 
     return redirect("speach:speach")
