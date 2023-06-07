@@ -16,3 +16,4 @@ django-payments
 openai
 six
 mysqlclient
+uvicorn

@@ -26,4 +26,6 @@ def get_openai_response(company_from_name, company_from_about, company_to_about,
         return response['choices'][0]['text']
     
     print("DEBUG MODE")
+    from time import sleep
+    sleep(30)
     return "Sales letter from " + company_from_name + "|With following about: " + company_from_about + "|To the company with following about: " + company_to_about +". T= " + str(temperature)

@@ -4,6 +4,13 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 import os, environ, openai, sys
+import logging
+logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
+logging.debug('This message should go to the log file')
+logging.info('So should this')
+logging.warning('And this, too')
+logging.error('And non-ASCII stuff, too, like Øresund and Malmö')
+
 
 def search_in_environment_or_docker_secrets(key : str) -> str:
     result = ""
@@ -110,6 +117,9 @@ TEMPLATES = [
 
 STRIPE_TEST_PUBLIC_KEY = search_in_environment_or_docker_secrets("STRIPE_TEST_PUBLIC_KEY")
 STRIPE_TEST_SECRET_KEY = search_in_environment_or_docker_secrets("STRIPE_TEST_SECRET_KEY")
+print("STRIPE_TEST_SECRET_KEY " + STRIPE_TEST_SECRET_KEY)
+logging.info("STRIPE_TEST_SECRET_KEY " + STRIPE_TEST_SECRET_KEY)
+
 openai.api_key = search_in_environment_or_docker_secrets("OPENAI_API_KEY")
 STRIPE_LIVE_MODE = False
 DJSTRIPE_WEBHOOK_SECRET = os.getenv('DJSTRIPE_WEBHOOK_SECRET','NO_SECRETS')  # We don't use this, but it must be set
@@ -130,7 +140,7 @@ if os.environ.get('DB_ENGINE') and os.environ.get('DB_ENGINE') == "mysql":
         'NAME'    : os.getenv('DB_NAME'     , 'appseed_db'),
         'USER'    : os.getenv('DB_USERNAME' , 'appseed_db_usr'),
         'PASSWORD': os.getenv('DB_PASS'     , 'pass'),
-        'HOST'    : os.getenv('DB_HOST'     , 'localhost'),
+        'HOST'    : os.getenv('DB_HOST'     , 'mysql-server'),
         'PORT'    : os.getenv('DB_PORT'     , 3306),
         }, 
     }
