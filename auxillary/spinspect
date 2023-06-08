@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+
+docker run -it  --entrypoint=/bin/bash --name salespeach_inspection --rm --env-file=$SP_HOME/secret/env_secrets -p 8000:8000 salespeach:latest

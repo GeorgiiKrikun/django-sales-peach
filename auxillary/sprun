@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+docker kill salespeach || true
+docker rm salespeach || true
+docker run --name salespeach --network salespeach --env-file=$SP_HOME/secret/env_secrets --detach -p 8000:8000 salespeach:latest
