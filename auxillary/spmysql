@@ -1,0 +1,6 @@
+#!/bin/bash
+
+systemctl stop mysql
+docker stop mysql-server || true 
+docker rm mysql-server || true
+docker run -d -p 3306:3306 --name mysql-server -e MYSQL_ROOT_PASSWORD=123 -v /home/georgii/software/mysql_mount_point/:/var/lib/mysql/ -e MYSQL_DATABASE=my_database --network=salespeach mysql/mysql-server:latest

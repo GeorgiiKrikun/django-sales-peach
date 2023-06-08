@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+#arguments
+# Parse command-line arguments
+while getopts "n:" opt; do
+  case $opt in
+    n) no_cache="$OPTARG";;
+    \?) echo "Invalid option -$OPTARG" >&2;;
+  esac
+done
+
+
+workdir=$SP_HOME/src/
+
+docker build $no_cache -t salespeach_base:latest $workdir -f $workdir/Dockerfile_base

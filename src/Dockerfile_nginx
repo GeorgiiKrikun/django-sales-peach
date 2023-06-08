@@ -1,0 +1,4 @@
+FROM nginx:latest
+
+RUN python3 manage.py collectstatic --noinput
+
