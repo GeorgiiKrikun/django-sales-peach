@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: salespeach
+  labels:
+    app: salespeach
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: salespeach
+  template:
+    metadata:
+      labels:
+        app: salespeach
+    spec:
+      containers:
+      - name: salespeach
+        image: europe-west3-docker.pkg.dev/studied-reason-374616/salespeach/salespeach:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: OPEN_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: salespeach-secrets
+              key: openapi
+        - name: STRIPE_TEST_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: salespeach-secrets
+              key: stripe_test_public_key
+        - name: STRIPE_TEST_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: salespeach-secrets
+              key: stripe_test_secret_key_copilot
+        - name: EMAIL_HOST_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: salespeach-secrets
+              key: email_host_password
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: salespeach-secrets
+              key: db_name
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: salespeach-secrets
+              key: db_username
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: salespeach-secrets
+              key: db_pass
+        - name: DJSTRIPE_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: salespeach-secrets
+              key: djstripe_webhook_secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: salespeach-svc
+spec:
+  type: NodePort
+  selector:
+    app: salespeach
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8000
+      nodePort: 30100

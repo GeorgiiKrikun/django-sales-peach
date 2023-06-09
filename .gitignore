@@ -20,7 +20,7 @@ venv
 
 # javascript
 package-lock.json
-
+kubernetes/secret
 src/staticfiles/
 secret/
 !staticfiles/.gitkeep 
