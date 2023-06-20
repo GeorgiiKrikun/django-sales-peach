@@ -7,7 +7,7 @@ RUN apt update
 RUN apt install -y mysql-client-8.0
 RUN apt install -y python3-pip
 RUN apt install -y libmysqlclient-dev
-RUN pip install -r /salespeach/requirements.txt
+RUN pip3 install -r /salespeach/requirements.txt
 
 EXPOSE 8000
 

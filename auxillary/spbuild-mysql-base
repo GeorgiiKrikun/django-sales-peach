@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-set -e
 
 #arguments
 # Parse command-line arguments
@@ -11,7 +10,8 @@ while getopts "n" opt; do
   esac
 done
 
+echo "no_cache: $no_cache"
 
-workdir=$SP_HOME/src/
+workdir=$SP_HOME/docker/mysql
 
-docker build $no_cache -t salespeach:latest $workdir -f $workdir/../docker/salespeach/salespeach_docker
+docker build $no_cache -t my-mysql-base:latest $workdir -f $workdir/base_docker

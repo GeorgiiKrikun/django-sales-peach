@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+  labels:
+    app: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+      containers:
+      - name: test
+        image: ubuntu:22.04
+        args: ["bash", "-c", "while true; do echo hello; sleep 10;done"]
+        stdin: true
+        stdinOnce: true
+        tty: true
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /mnt/mysql

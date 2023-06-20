@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-sql-ini
+  labels:
+    app: my-sql-ini
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-sql-ini
+  template:
+    metadata:
+      labels:
+        app: my-sql-ini
+    spec:
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+      containers:
+      - name: my-sql-ini
+        image: my-mysql-base:latest
+        imagePullPolicy: Never
+        command: ["bash", "-c", "while true; do echo hello; sleep 10;done"]
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
