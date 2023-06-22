@@ -2,7 +2,7 @@ from typing import Any, Dict, Mapping, Optional, Type, Union
 from django.core.files.base import File
 from django.db.models.base import Model
 from django.forms.utils import ErrorList
-from .models import PastRequest,Company
+from .models import PastRequest,Company, Feedback, FeedbackTopic
 from django.forms import *
 from enum import Enum
 
@@ -53,9 +53,41 @@ class CompanyForm(ModelForm):
         if commit:
             req.save()
         return req
+    
+class FeedbackForm(ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['feedback', 'topic_id']
+
+    def __init__(self, *args, **kwargs) -> None:
+        self.user = kwargs.pop("user", None)
+        assert self.user is not None, "User must be provided"
+        super().__init__(*args, **kwargs)
+
+        self.fields['feedback'].widget = Textarea(
+            attrs={
+                "name":"feedback",
+                "class":"form-control",
+                "id":"feedback_text",
+                "rows":"5",
+            }
+        )
+        self.fields['topic_id'].widget = Select(
+            attrs={
+                "class": "form-control",
+                "id": "topic_id",
+            },
+        )
+        self.fields['topic_id'].queryset = FeedbackTopic.objects.all()
+
+    def save(self, commit=True):
+        req = super().save(commit=False)
+        req.user = self.user
+        if commit:
+            req.save()
+        return req
 
 class PastRequestForm(ModelForm):
-    
     
     class Meta:
         model = PastRequest

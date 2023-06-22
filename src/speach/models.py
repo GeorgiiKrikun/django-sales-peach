@@ -31,3 +31,19 @@ class PastRequest(models.Model):
     temperature = models.FloatField(default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Feedback(models.Model):
+    feedback_size = 1000
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    topic_id = models.ForeignKey('FeedbackTopic', on_delete=models.CASCADE)
+    feedback = models.CharField(max_length=feedback_size)
+
+class FeedbackTopic(models.Model):
+    topic = models.CharField(max_length=100)
+    def __str__(self):
+        return self.topic
+
+    
+class FeedbackFile(models.Model):
+    feedback = models.ForeignKey(Feedback, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='feedback_files')

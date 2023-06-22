@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from speach.views import companies, speach, subscribe, registration
+from speach.views import companies, speach, subscribe, registration, feedback
 
 app_name = "speach"
 
@@ -31,7 +31,7 @@ urlpatterns = [
     # #Registration
     path('finished_registration', registration.finished_registration , name='finished_registration'),
     # #Feedback
-    # path('feedback', feedback.feedback , name='feedback'),
-    # path('submit_feedback', feedback.submit_feedback , name='submit_feedback'),
+    path('feedback', feedback.form_feedback , name='feedback'),
+    path('submit_feedback', feedback.submit_feedback , name='submit_feedback'),
 
 ]
