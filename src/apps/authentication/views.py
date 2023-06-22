@@ -56,6 +56,11 @@ def register_user(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
+            email = form.cleaned_data.get("email")
+            if User.objects.filter(email=email).exists():
+                messages.error(request, f'Email {email} is already in use. If you do not remeber your password, use password <a href={reverse("authentication:reset_password")}> reset. </a>')
+                return redirect(reverse('authentication:register'))
+
             form.save()
             username = form.cleaned_data.get("username")
             raw_password = form.cleaned_data.get("password1")

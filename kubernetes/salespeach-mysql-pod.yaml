@@ -20,21 +20,11 @@ spec:
           claimName: mysql-pv-claim
       containers:
       - name: my-sql
-        image: my-mysql-base:latest
-        imagePullPolicy: Never
+        # image: my-mysql-base:latest
+        # imagePullPolicy: Never
+        image: europe-west3-docker.pkg.dev/studied-reason-374616/salespeach/mysql:latest 
         ports:
         - containerPort: 3306
-        # env:
-        # - name: MYSQL_ROOT_PASSWORD
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: salespeach-secrets
-        #       key: db_pass
-        # - name: MYSQL_DATABASE
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: salespeach-secrets
-        #       key: db_name
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql

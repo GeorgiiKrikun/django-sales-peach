@@ -16,8 +16,9 @@ spec:
     spec:
       containers:
       - name: salespeach
-        image: salespeach:latest
-        imagePullPolicy: Never
+        image: europe-west3-docker.pkg.dev/studied-reason-374616/salespeach/salespeach:latest
+        # image: salespeach:latest
+        # imagePullPolicy: Never
         # args: ["bash", "-c", "while true; do echo hello; sleep 10;done"]
         ports:
         - containerPort: 8000
