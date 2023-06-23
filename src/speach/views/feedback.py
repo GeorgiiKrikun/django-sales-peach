@@ -9,7 +9,7 @@ from ..forms import FeedbackForm
 
 @login_required(login_url="authentication:login")
 def feedback(request):
-    context = {'problems': Feedback.topic_ids}
+    context =  {'segment': 'feedback'}
     return render(request, 'feedback/add_feedback.html', context)
 
 @login_required(login_url="authentication:login")
@@ -31,7 +31,7 @@ def submit_feedback(request):
                 file.name = str(timezone.now()) + "_" + file.name
                 feedbackFile.file = file
                 feedbackFile.save()
-        return render(request, 'feedback/thank_for_your_feedback.html', {})
+        return render(request, 'feedback/thank_for_your_feedback.html', {'segment': 'feedback'})
     else:
         return redirect('home:feedback')
     
@@ -39,7 +39,7 @@ def form_feedback(request):
     user = request.user
     if request.method == 'GET':
         form = FeedbackForm(user=user)
-        return render(request, 'feedback/add_feedback.html', {'form': form})
+        return render(request, 'feedback/add_feedback.html', {'form': form, 'segment': 'feedback'})
     elif request.method == 'POST':
         form = FeedbackForm(request.POST, user=user)
         if form.is_valid():
@@ -57,6 +57,6 @@ def form_feedback(request):
                 feedbackFile.file = file
                 feedbackFile.save()
 
-        return render(request, 'feedback/thank_for_your_feedback.html', {})
+        return render(request, 'feedback/thank_for_your_feedback.html', {'segment': 'feedback'})
         
     
