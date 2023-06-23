@@ -5,11 +5,82 @@ Copyright (c) 2019 - present AppSeed.us
 
 import os, environ, openai, sys
 import logging
-logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
-logging.debug('This message should go to the log file')
-logging.info('So should this')
-logging.warning('And this, too')
-logging.error('And non-ASCII stuff, too, like Øresund and Malmö')
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "../log/log_file_django.log",
+            "formatter": "verbose",
+        },
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+}
+
+logger = logging.getLogger("dev")
+logger.info(logger.name)
+logger.setLevel(logging.DEBUG)
+# Create a formatter
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+# Create a console handler
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
+# Create a file handler
+file_handler = logging.FileHandler('../log/salespeach.log')
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+logger = logging.getLogger("prod")
+logger.info(logger.name)
+logger.setLevel(logging.WARNING)
+
+# Create a console handler
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.WARNING)
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
+# Create a file handler
+file_handler = logging.FileHandler('../log/salespeach.log')
+file_handler.setLevel(logging.WARNING)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+STAGE=os.environ.get('STAGE', 'dev')
+logging.getLogger("dev").info(f"Serving in {STAGE} mode")
+LOGGER=logging.getLogger(STAGE)
+
+
+# # logging.basicConfig(filename='/var/log/salespeach/salespeach.log', encoding='utf-8', level=logging.DEBUG)
 
 
 def search_in_environment_or_docker_secrets(key : str) -> str:

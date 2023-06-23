@@ -18,6 +18,9 @@ venv
 # other
 .DS_Store
 
+#logs
+log/*
+
 # javascript
 package-lock.json
 kubernetes/secret
