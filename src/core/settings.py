@@ -61,17 +61,17 @@ logger.addHandler(file_handler)
 
 logger = logging.getLogger("prod")
 logger.info(logger.name)
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.ERROR)
 
 # Create a console handler
 console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.WARNING)
+console_handler.setLevel(logging.ERROR)
 console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
 # Create a file handler
 file_handler = logging.FileHandler('../log/salespeach.log')
-file_handler.setLevel(logging.WARNING)
+file_handler.setLevel(logging.ERROR)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
