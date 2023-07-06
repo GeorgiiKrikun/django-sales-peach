@@ -26,21 +26,26 @@
                                     </li>
 
                                     {% for company in companies %}
-                                        <li><a class="nav-link text-left" id="{{ company.id }}-tab" data-toggle="pill" href="#{{ company.id }}-text" role="tab" aria-controls="{{ company.name }}-tab" aria-selected="true">{{ company.name }}</a></li>
+                                        <li><a class="nav-link text-left" id="{{ company.company.id }}-tab" data-toggle="pill" href="#{{ company.company.id }}-text" role="tab" aria-controls="{{ company.company.name }}-tab" aria-selected="true">{{ company.company.name }}</a></li>
                                     {% endfor %}
                                 </ul>
                             </div>
                             <div class="col-md-9 col-sm-12">
                                 <div class="tab-content" id="v-pills-tabContent">
                                     {% for company in companies %}
-                                        <div class="tab-pane fade" id="{{company.id}}-text" role="tabpanel" aria-labelledby="{{company.id}}-text">
+                                        <div class="tab-pane fade" id="{{company.company.id}}-text" role="tabpanel" aria-labelledby="{{company.company.id}}-text">
                                             <form action="{% url 'speach:company'  %}" method="post">
                                                 {% csrf_token %}
-                                                <p class="mb-0">{{company.about}}</p>
+                                                <p class="mb-0">{{company.company.about}}</p>
+                                                <b>SERVICES: </b>
+                                                <a href={% url 'speach:add_service' company.company.id  %}>Add new</a>, 
+                                                {% for service in company.services %}
+                                                    <a href={% url 'speach:add_service' company.company.id service.id %}>{{service.name}}</a>, 
+                                                {% endfor %}
                                                 <br>
                                                 <input type="submit" name="submit" value="Edit" />
                                                 <input type="submit" name="submit" value="Delete" />
-                                                <input type="hidden" name="company_id" value="{{company.id}}" />
+                                                <input type="hidden" name="company_id" value="{{company.company.id}}" />
                                             </form>
                                         </div>
                                     {% endfor %}

@@ -15,6 +15,13 @@ class Company(models.Model):
     def __str__(self):
         return self.name
     
+class Service(models.Model):
+    name = models.CharField(max_length=100)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    about = models.CharField(max_length=1000)
+    def __str__(self):
+        return self.name
+    
 class UserData(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE)

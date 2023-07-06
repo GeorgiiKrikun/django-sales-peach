@@ -34,4 +34,8 @@ urlpatterns = [
     path('feedback', feedback.form_feedback , name='feedback'),
     path('submit_feedback', feedback.submit_feedback , name='submit_feedback'),
 
+    #Services
+    path('add_service/<int:company_id>', companies.add_service , name='add_service'),
+    path('add_service/<int:company_id>/<int:service_id>', companies.add_service , name='add_service'),
+
 ]

@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Company, PastRequest, UserData, Feedback, FeedbackTopic, FeedbackFile
+from .models import Company, PastRequest, UserData, Feedback, FeedbackTopic, FeedbackFile, Service
 
-admin.site.register([Company, PastRequest, UserData, Feedback, FeedbackTopic, FeedbackFile])
+admin.site.register([Company, PastRequest, UserData, Feedback, FeedbackTopic, FeedbackFile,Service ])
 # admin.site.register(PastRequest)
 # admin.site.register(UserData)
 # admin.site.register(Feedback)
