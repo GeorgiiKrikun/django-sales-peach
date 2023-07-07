@@ -6,7 +6,6 @@ from django.urls import reverse
 from django.shortcuts import redirect, render
 from ..forms import operation_modes, CompanyForm, ServiceForm
 
-
 @login_required(login_url="authentication:login")
 def edit_company(request):
     if request.method == 'POST':
@@ -18,7 +17,7 @@ def edit_company(request):
             company.name = request.POST['name']
         company.about = request.POST['']
         company.save()
-        return HttpResponseRedirect(reverse('speach:companies'))
+        return HttpResponseRedirect(reverse('speach:companies'), context={"selected_id": company.id})
     
 @login_required(login_url="authentication:login")
 def company(request):
@@ -44,6 +43,7 @@ def company(request):
             if form.is_valid():
                 company = form.save(commit=True)
                 company.save()
+                request.session['selected_company_id'] = company.id
                 return redirect(reverse('speach:companies'))
             else:
                 raise ValueError("Form is not valid")
@@ -140,10 +140,11 @@ def add_service(request, company_id: int, service_id: int = None):
 def companies(request):
     context = {'segment': 'companies',
                'companies': []}
-               
+
+    session = request.session
+    selected_id = session.get('selected_company_id', None)
     current_user = request.user
     companies = Company.objects.filter(user_id=current_user.pk )
-    selected_id = None
     for company in companies:
         if selected_id is None:
             selected_id = company.id
@@ -154,7 +155,8 @@ def companies(request):
             dictionary['services'].append(service)
         context['companies'].append(dictionary)
     context['selected_id'] = selected_id
-
+    session['selected_company_id'] = selected_id
+    
     html_template = loader.get_template('companies/companies.html')
     return HttpResponse(html_template.render(context, request))
 
@@ -175,38 +177,3 @@ def edit_company(request):
     else:
         return HttpResponseRedirect(reverse('speach:companies', args=()))
 
-
-    
-@login_required(login_url="authentication:login")
-def finished_edit_company(request):
-    if request.method == 'POST':
-        print("POST " + str(request.POST))
-        company = Company.objects.get(pk=request.POST['company_id'])
-        company.about = request.POST['about']
-        company.name = request.POST['name']
-        company.save()
-
-    return HttpResponseRedirect(reverse('speach:companies', args=()))
-
-@login_required(login_url="authentication:login")
-def add_company(request):
-    if request.method == 'POST':
-        print("POST " + str(request.POST))
-
-    context = {'segment': 'companies'}
-    html_template = loader.get_template('companies/add_company.html')
-    return HttpResponse(html_template.render(context, request))
-        
-
-@login_required(login_url="authentication:login")
-def finished_adding_company(request):
-    if request.method == 'POST':
-        print("POST " + str(request.POST))
-        current_user = request.user
-        company = Company()
-        company.user = current_user
-        company.about = request.POST['about']
-        company.name = request.POST['name']
-        company.save()
-
-    return HttpResponseRedirect(reverse('speach:companies', args=()))

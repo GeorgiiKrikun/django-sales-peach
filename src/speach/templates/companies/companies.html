@@ -10,6 +10,9 @@
 {% block content %}
 {% load static %}
 
+
+<input type="hidden" id="selected_id" value="{{selected_id}}">
+
 <div class="pcoded-main-container">
     <div class="pcoded-wrapper">
         <div class="pcoded-content">
@@ -34,7 +37,7 @@
                             <div class="col-md-9 col-sm-12">
                                 <div >
                                     {% for company in companies %}
-                                        <div id="{{company.company.id}}-description" class="vertical-description" style="display:none;" >
+                                        <div id="{{company.company.id}}-description" class="vertical-description" style="display:none;">
                                             <form action="{% url 'speach:company'  %}" method="post">
                                                 {% csrf_token %}
                                                 <p class="mb-0">{{company.company.about}}</p>

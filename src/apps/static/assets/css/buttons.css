@@ -9,10 +9,21 @@
 
 .button-vertical-list li button {
     width: 100%;
+    /* border-radius: 0.25rem; */
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
     margin: 10;
     padding: 20px;
-    background-color: inherit;
+    background-color: ;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
+
+.button-vertical-list li button:hover {
+    background-color: rgb(35, 129, 212);
+}
+
 
 /* .button-vertical-list li button:active {
     width: 100%;
@@ -25,13 +36,8 @@
 } */
 
 .button-vertical-list li .selected {
-    width: 100%;
-    margin: 10;
-    padding: 20px;
-    background-color: navy;
-    border: none;
-    text-align: center;
-    text-decoration: inherit;
+    background-color: rgb(25, 89, 144);
+    color:white;
 }
 
 
