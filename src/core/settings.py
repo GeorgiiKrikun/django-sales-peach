@@ -6,18 +6,27 @@ Copyright (c) 2019 - present AppSeed.us
 import os, environ, openai, sys
 import logging
 
+
+STAGE=os.environ.get('STAGE', 'dev')
+if STAGE == 'prod':
+    log_level = logging.ERROR
+elif STAGE == 'debug':
+    log_level = logging.DEBUG
+else:
+    log_level = logging.INFO
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
         "file": {
-            "level": "DEBUG",
+            "level": log_level,
             "class": "logging.FileHandler",
             "filename": "../log/log_file_django.log",
             "formatter": "verbose",
         },
         "console": {
-            "level": "DEBUG",
+            "level": log_level,
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
@@ -25,7 +34,7 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console", "file"],
-            "level": "DEBUG",
+            "level": log_level,
             "propagate": True,
         },
     },
@@ -41,43 +50,25 @@ LOGGING = {
     },
 }
 
-logger = logging.getLogger("dev")
-logger.info(logger.name)
-logger.setLevel(logging.DEBUG)
-# Create a formatter
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-
-# Create a console handler
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.DEBUG)
-console_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
-
-# Create a file handler
-file_handler = logging.FileHandler('../log/salespeach.log')
-file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-
-logger = logging.getLogger("prod")
+logger = logging.getLogger("salespeach")
 logger.info(logger.name)
-logger.setLevel(logging.ERROR)
+logger.setLevel(log_level)
 
 # Create a console handler
 console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.ERROR)
+console_handler.setLevel(log_level)
 console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
 # Create a file handler
 file_handler = logging.FileHandler('../log/salespeach.log')
-file_handler.setLevel(logging.ERROR)
+file_handler.setLevel(log_level)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
-STAGE=os.environ.get('STAGE', 'dev')
-logging.getLogger("dev").info(f"Serving in {STAGE} mode")
-LOGGER=logging.getLogger(STAGE)
+LOGGER=logging.getLogger("salespeach")
+LOGGER.info(f"Logger initialized in {STAGE} mode")
 
 
 # # logging.basicConfig(filename='/var/log/salespeach/salespeach.log', encoding='utf-8', level=logging.DEBUG)

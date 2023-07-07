@@ -1,0 +1,37 @@
+.button-vertical-list li {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 10;
+    padding: 0;
+    list-style-type: none;
+}
+
+.button-vertical-list li button {
+    width: 100%;
+    margin: 10;
+    padding: 20px;
+    background-color: inherit;
+}
+
+/* .button-vertical-list li button:active {
+    width: 100%;
+    margin: 10;
+    padding: 20px;
+    background-color: navy;
+    border: none;
+    text-align: center;
+    text-decoration: inherit;
+} */
+
+.button-vertical-list li .selected {
+    width: 100%;
+    margin: 10;
+    padding: 20px;
+    background-color: navy;
+    border: none;
+    text-align: center;
+    text-decoration: inherit;
+}
+
+

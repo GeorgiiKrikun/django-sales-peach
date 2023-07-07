@@ -3,37 +3,38 @@
 {% block title %} Speach {% endblock %} 
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ ASSETS_ROOT }}/css/buttons.css">
+{% endblock stylesheets %}
 
 {% block content %}
-
+{% load static %}
 
 <div class="pcoded-main-container">
     <div class="pcoded-wrapper">
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
-                <div class="form-group">
-                        <hr>
                         <div class="row">
                             <div class="col-md-3 col-sm-12">
-                                <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                <ul class="button-vertical-list" id="v-pills-tab" >
                                     <li>
                                         <form method="post" action={% url 'speach:company'%}>
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-secondary"> Add new </button>
+                                            <button type="submit" class="vertical-list-button" > Add new </button>
                                             <input type="hidden" name="submit" value="Create" />
                                         </form>
                                     </li>
-
+                                    <li>
                                     {% for company in companies %}
-                                        <li><a class="nav-link text-left" id="{{ company.company.id }}-tab" data-toggle="pill" href="#{{ company.company.id }}-text" role="tab" aria-controls="{{ company.company.name }}-tab" aria-selected="true">{{ company.company.name }}</a></li>
+                                            <button id={{company.company.id}} class="vertical-list-button" onclick="toggle_description(this.id)"> {{ company.company.name }}</button>
                                     {% endfor %}
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-md-9 col-sm-12">
-                                <div class="tab-content" id="v-pills-tabContent">
+                                <div >
                                     {% for company in companies %}
-                                        <div class="tab-pane fade" id="{{company.company.id}}-text" role="tabpanel" aria-labelledby="{{company.company.id}}-text">
+                                        <div id="{{company.company.id}}-description" class="vertical-description" style="display:none;" >
                                             <form action="{% url 'speach:company'  %}" method="post">
                                                 {% csrf_token %}
                                                 <p class="mb-0">{{company.company.about}}</p>
@@ -52,7 +53,6 @@
                                 </div>
                             </div>
                         </div>
-                </div>
             </div>
         </div>
     </div>
@@ -60,4 +60,6 @@
 
 {% endblock content %}
 
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script src="{% static 'assets/js/buttons.js' %}"></script> 
+{% endblock javascripts %}

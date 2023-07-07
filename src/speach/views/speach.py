@@ -40,7 +40,7 @@ def speach(request):
     else:
         form = PastRequestForm(operation_mode = operation_modes.CREATE, user=user)
     return render(request, 'speach/speach.html', {'form': form, 'operation_mode': str(operation_modes.CREATE),
-                                                  'segment': 'speach'})
+                                                  'segment': 'speach', 'id': 'none'})
 
 def create_result_based_on_past_request(past_request: PastRequest, temperature = 0):
     company_id = past_request.company.id

@@ -134,26 +134,26 @@ def add_service(request, company_id: int, service_id: int = None):
         # else:
         #     raise ValueError("Unknown submit value")
         
-    
-
 
 
 @login_required(login_url="authentication:login")
-def companies(request, selected = None):
+def companies(request):
     context = {'segment': 'companies',
                'companies': []}
                
     current_user = request.user
     companies = Company.objects.filter(user_id=current_user.pk )
-
+    selected_id = None
     for company in companies:
+        if selected_id is None:
+            selected_id = company.id
         dictionary = {'company': company,
                       'services': []}
         services = Service.objects.filter(company_id=company.id)
         for service in services:
             dictionary['services'].append(service)
         context['companies'].append(dictionary)
-        
+    context['selected_id'] = selected_id
 
     html_template = loader.get_template('companies/companies.html')
     return HttpResponse(html_template.render(context, request))
