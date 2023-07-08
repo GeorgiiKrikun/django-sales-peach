@@ -50,8 +50,8 @@
                                                     <a href={% url 'speach:add_service' company.company.id  %}>Add new</a> 
                                                 
                                                 </p>
-                                                <input type="submit" name="submit" value="Edit" />
-                                                <input type="submit" name="submit" value="Delete" />
+                                                <input type="submit" name="submit" class="btn btn-primary" value="Edit" />
+                                                <input type="submit" name="submit" class="btn btn-danger" value="Delete" />
                                                 <input type="hidden" name="company_id" value="{{company.company.id}}" />
                                             </form>
                                         </div>
