@@ -10,7 +10,7 @@ from decimal import Decimal
 class Company(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    about = models.CharField(max_length=1000)
+    about = models.CharField(max_length=1000, default="")
 
     def __str__(self):
         return self.name
@@ -18,7 +18,7 @@ class Company(models.Model):
 class Service(models.Model):
     name = models.CharField(max_length=100)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    about = models.CharField(max_length=1000)
+    about = models.CharField(max_length=1000, blank=True, null=True)
     def __str__(self):
         return self.name
     

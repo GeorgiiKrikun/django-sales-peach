@@ -21,16 +21,16 @@
                             <div class="col-md-3 col-sm-12">
                                 <ul class="button-vertical-list" id="v-pills-tab" >
                                     <li>
+                                    {% for company in companies %}
+                                            <button id={{company.company.id}} class="vertical-list-button" onclick="toggle_description(this.id)"> {{ company.company.name }}</button>
+                                    {% endfor %}
+                                    </li>
+                                    <li>
                                         <form method="post" action={% url 'speach:company'%}>
                                             {% csrf_token %}
                                             <button type="submit" class="vertical-list-button" > Add new </button>
                                             <input type="hidden" name="submit" value="Create" />
                                         </form>
-                                    </li>
-                                    <li>
-                                    {% for company in companies %}
-                                            <button id={{company.company.id}} class="vertical-list-button" onclick="toggle_description(this.id)"> {{ company.company.name }}</button>
-                                    {% endfor %}
                                     </li>
                                 </ul>
                             </div>
@@ -41,12 +41,15 @@
                                             <form action="{% url 'speach:company'  %}" method="post">
                                                 {% csrf_token %}
                                                 <p class="mb-0">{{company.company.about}}</p>
-                                                <b>SERVICES: </b>
-                                                <a href={% url 'speach:add_service' company.company.id  %}>Add new</a>, 
-                                                {% for service in company.services %}
-                                                    <a href={% url 'speach:add_service' company.company.id service.id %}>{{service.name}}</a>, 
-                                                {% endfor %}
-                                                <br>
+                                                <hr>
+                                                <p> SERVICES: </p>
+                                                <p>
+                                                    {% for service in company.services %}
+                                                        <a href={% url 'speach:add_service' company.company.id service.id %}>{{service.name}}</a>, 
+                                                    {% endfor %}
+                                                    <a href={% url 'speach:add_service' company.company.id  %}>Add new</a> 
+                                                
+                                                </p>
                                                 <input type="submit" name="submit" value="Edit" />
                                                 <input type="submit" name="submit" value="Delete" />
                                                 <input type="hidden" name="company_id" value="{{company.company.id}}" />
