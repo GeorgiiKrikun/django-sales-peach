@@ -6,6 +6,8 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+{% load static %}
+
 
 
 <div class="pcoded-main-container">
@@ -13,8 +15,7 @@
     {{ form.non_field_errors }}
     <form method="post">
         {% csrf_token %}
-        {{ form.company.label_tag }} {{ form.company }} {{ form.errors }}
-        {{ form.request.label_tag }} {{ form.request }} {{ form.errors }}
+        {{ form.as_p }}
         {% if operation_mode == "CREATE" %}
         <br><button type="submit" class="btn btn-primary"> Go </button>
         {% elif operation_mode  == "VIEW" %}
@@ -30,4 +31,6 @@
 </div>
 
 {% endblock content %}
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script src="{% static 'assets/js/speach.js' %}"></script> 
+{% endblock javascripts %}

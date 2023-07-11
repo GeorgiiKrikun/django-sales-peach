@@ -2,9 +2,28 @@ from typing import Any, Dict, Mapping, Optional, Type, Union
 from django.core.files.base import File
 from django.db.models.base import Model
 from django.forms.utils import ErrorList
-from .models import PastRequest,Company, Feedback, FeedbackTopic, Service
+from speach.models import PastRequest, Company, Feedback, FeedbackTopic, Service
 from django.forms import *
 from enum import Enum
+# import logging
+# import os
+# logger = logging.getLogger(os.getenv("STAGE","dev"))
+from core.settings import LOGGER
+
+class MySelectWidget(Widget):
+    def __init__(self, attrs=... ) -> None:
+        super().__init__(attrs)
+        self._context = []
+        self.template_name = "widgets/SelectWidget.html"
+    
+    def get_context(self, name: str, value: Any, attrs) -> Dict[str, Any]:
+        context= super().get_context(name, value, attrs)
+        context['opts'] = self._context
+        return context
+    
+    def add_value(self, value: str, label:str, additional:str = "") -> None:
+        self._context.append({"value":value, "label":label, 
+                              "additional":additional})   
 
 class operation_modes(Enum):
     VIEW = 0
@@ -131,9 +150,9 @@ class PastRequestForm(ModelForm):
     
     class Meta:
         model = PastRequest
-        fields = ['company', 'request', 'response']
+        fields = ['company', 'service', 'request', 'response']
+        # fields = "__all__"
     
-
     def __init__(self, *args, **kwargs) -> None:
         operation_mode = kwargs.pop("operation_mode", operation_modes.VIEW)
         assert operation_mode in operation_modes, f"Invalid operation mode {operation_mode}"
@@ -142,7 +161,7 @@ class PastRequestForm(ModelForm):
 
         super().__init__(*args, **kwargs)
 
-
+        LOGGER.warning(self.fields)
 
         self.fields['company'].widget = Select(
             attrs={
@@ -151,13 +170,32 @@ class PastRequestForm(ModelForm):
             },
         )
 
+        self.fields['service'].widget = MySelectWidget(
+            attrs={
+                "class": "form-control",
+                "id": "service_name",
+            },
+        )
+        select_widget = self.fields['service'].widget
+
+        companies = Company.objects.filter(user_id=self.user.pk).order_by('pk','name')
+        self.fields['company'].widget.choices = [(c.pk, c.name) for c in companies]
+        for c in companies:
+            services = Service.objects.filter(company_id=c.pk)
+            for s in services:
+                select_widget.add_value(s.pk, s.name, s.company.pk)
+
+        
+        # for s in services:
+        #     self.fields['service'].widget.create_option(s.name, s.pk, s.company.name, False, s.pk)
+
         self.fields['request'].widget = Textarea(
             attrs={
                 "placeholder": "Write here something about the company you are writing to",
                 "name":"AboutInput",
                 "class":"form-control",
                 "id":"company_description",
-                "rows":"3",
+                "rows":"5",
             }
         )
 
@@ -171,16 +209,13 @@ class PastRequestForm(ModelForm):
         )
 
         if operation_mode == operation_modes.VIEW:
-            for field in [f for f in self.fields if f is not None]:
+            for field in [f for f in self.fields if f is not None and f.widget is not None]:
                 self.fields[field].widget.attrs['disabled'] = True
-
-        self.fields['company'].queryset = Company.objects.filter(user_id=self.user.pk)
+        if operation_mode == operation_modes.CREATE:
+            self.fields['response'].widget.attrs['hidden'] = True
+            self.fields['response'].label = ""
     
         
-
-    class Meta:
-        model = PastRequest
-        fields = ['company', 'request', 'response']
 
     def save(self, commit=True):
         req = super().save(commit=False)

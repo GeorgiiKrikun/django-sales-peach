@@ -1,10 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from ..models import Company, PastRequest, UserData
+from speach.models import Company, PastRequest, UserData
 from django.urls import reverse
 import externals.openai as openai
 from django.shortcuts import redirect, render
-from ..forms import PastRequestForm
-from ..forms import operation_modes
+from speach.forms import PastRequestForm, operation_modes
 
 
 
