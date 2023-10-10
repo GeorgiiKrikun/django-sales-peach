@@ -1,0 +1,4 @@
+#!/bin/bash
+
+#Base64 encoding without line breaks
+echo -n "$1" | base64 -w 0

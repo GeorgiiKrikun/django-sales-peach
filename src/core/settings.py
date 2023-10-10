@@ -5,11 +5,73 @@ Copyright (c) 2019 - present AppSeed.us
 
 import os, environ, openai, sys
 import logging
-logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
-logging.debug('This message should go to the log file')
-logging.info('So should this')
-logging.warning('And this, too')
-logging.error('And non-ASCII stuff, too, like Øresund and Malmö')
+
+
+STAGE=os.environ.get('STAGE', 'dev')
+if STAGE == 'prod':
+    log_level = logging.ERROR
+elif STAGE == 'debug':
+    log_level = logging.DEBUG
+else:
+    log_level = logging.INFO
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": log_level,
+            "class": "logging.FileHandler",
+            "filename": "../log/log_file_django.log",
+            "formatter": "verbose",
+        },
+        "console": {
+            "level": log_level,
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file"],
+            "level": log_level,
+            "propagate": True,
+        },
+    },
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+}
+
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger("salespeach")
+logger.info(logger.name)
+logger.setLevel(log_level)
+
+# Create a console handler
+console_handler = logging.StreamHandler()
+console_handler.setLevel(log_level)
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
+# Create a file handler
+file_handler = logging.FileHandler('../log/salespeach.log')
+file_handler.setLevel(log_level)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+LOGGER=logging.getLogger("salespeach")
+LOGGER.info(f"Logger initialized in {STAGE} mode")
+
+
+# # logging.basicConfig(filename='/var/log/salespeach/salespeach.log', encoding='utf-8', level=logging.DEBUG)
 
 
 def search_in_environment_or_docker_secrets(key : str) -> str:
@@ -46,8 +108,8 @@ DEBUG = env('DEBUG')
 ASSETS_ROOT = os.getenv('ASSETS_ROOT', '/static/assets') 
 
 # load production server from .env
-ALLOWED_HOSTS        = ['localhost', 'salespeach', 'localhost:85', '127.0.0.1', '34.159.127.226', '0.0.0.0', '10.0.0.18', 'www.salespeach.org', env('SERVER', default='127.0.0.1') ]
-CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', 'https://www.salespeach.org']
+ALLOWED_HOSTS        = ['localhost', 'salespeach', 'localhost:85', '192.168.49.2', '127.0.0.1', '34.159.127.226', '0.0.0.0', '10.0.0.18', 'www.salespeach.org', env('SERVER', default='127.0.0.1') ]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:85', '192.168.49.2', 'http://127.0.0.1', 'https://www.salespeach.org']
 
 # Application definition
 
@@ -134,6 +196,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 if os.environ.get('DB_ENGINE') and os.environ.get('DB_ENGINE') == "mysql":
+    logging.info("Using MySQL database")
     DATABASES = { 
       'default': {
         'ENGINE'  : 'django.db.backends.mysql', 
@@ -145,6 +208,7 @@ if os.environ.get('DB_ENGINE') and os.environ.get('DB_ENGINE') == "mysql":
         }, 
     }
 else:
+    logging.info("Using SQLite database")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

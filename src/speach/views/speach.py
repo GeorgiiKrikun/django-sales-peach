@@ -1,10 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from ..models import Company, PastRequest, UserData
+from speach.models import Company, PastRequest, UserData
 from django.urls import reverse
 import externals.openai as openai
 from django.shortcuts import redirect, render
-from ..forms import PastRequestForm
-from ..forms import operation_modes
+from speach.forms import PastRequestForm, operation_modes
 
 
 
@@ -24,7 +23,8 @@ def speach(request):
             else:
                 raise ValueError("Form is not valid")
             result_form = PastRequestForm(instance=past_request, user=user, operation_mode=operation_modes.VIEW)
-            return render(request,'speach/speach.html', {'form':result_form, 'operation_mode': str(operation_modes.VIEW), 'id':past_request.id})  
+            return render(request,'speach/speach.html', {'form':result_form, 'operation_mode': str(operation_modes.VIEW), 'id':past_request.id,
+                                                         'segment': 'speach'})  
         elif operation_mode == operation_modes.VIEW:
             id = request.POST.get('id') 
             past_request = PastRequest.objects.get(id=id)
@@ -34,10 +34,12 @@ def speach(request):
             past_request.response = response
             past_request.save()
             result_form = PastRequestForm(instance=past_request, user=user, operation_mode=operation_modes.VIEW)
-            return render(request,'speach/speach.html', {'form':result_form, 'operation_mode': str(operation_modes.VIEW), 'id':past_request.id})
+            return render(request,'speach/speach.html', {'form':result_form, 'operation_mode': str(operation_modes.VIEW), 'id':past_request.id,
+                                                         'segment': 'speach'})
     else:
         form = PastRequestForm(operation_mode = operation_modes.CREATE, user=user)
-    return render(request, 'speach/speach.html', {'form': form, 'operation_mode': str(operation_modes.CREATE)})
+    return render(request, 'speach/speach.html', {'form': form, 'operation_mode': str(operation_modes.CREATE),
+                                                  'segment': 'speach', 'id': 'none'})
 
 def create_result_based_on_past_request(past_request: PastRequest, temperature = 0):
     company_id = past_request.company.id

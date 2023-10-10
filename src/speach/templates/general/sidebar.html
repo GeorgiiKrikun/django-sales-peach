@@ -39,12 +39,12 @@
                 <li class="nav-item pcoded-menu-caption">
                     <label>More Resources</label>
                 </li>                    
-                <li data-username="Support Page" class="nav-item ">
-                    <a target="_blank" href="/feedback" class="nav-link">
+                <li data-username="Support Page" class="nav-item {% if 'feedback' in segment %} active {% endif %}">
+                    <a href="/speach/feedback" class="nav-link">
                         <span class="pcoded-micon">
                             <i class="feather icon-headphones"></i>
                         </span>
-                        <span class="pcoded-mtext">Support</span>
+                        <span class="pcoded-mtext">Support/Feedback</span>
                     </a>
                 </li>
                 <li data-username="Logout" class="nav-item">

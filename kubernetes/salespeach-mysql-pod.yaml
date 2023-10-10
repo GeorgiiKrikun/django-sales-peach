@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-sql
+  labels:
+    app: my-sql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-sql
+  template:
+    metadata:
+      labels:
+        app: my-sql
+    spec:
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+      containers:
+      - name: my-sql
+        # image: my-mysql-base:latest
+        # imagePullPolicy: Never
+        image: europe-west3-docker.pkg.dev/studied-reason-374616/salespeach/mysql:latest 
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-svc
+spec:
+  selector:
+    app: my-sql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+---
