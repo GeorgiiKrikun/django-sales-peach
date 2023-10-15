@@ -46,5 +46,5 @@ def create_result_based_on_past_request(past_request: PastRequest, temperature =
     current_user = past_request.user
     company = Company.objects.get(id=company_id)
     user_data = UserData.objects.get(user=current_user.pk)
-    response = openai.get_openai_response(company.name, company.about, past_request.request, temperature)
+    response =  openai.get_suggestion_from_api(company.name, company.about, past_request.request, temperature)
     return response
