@@ -19,7 +19,6 @@
         {% if operation_mode == "CREATE" %}
         <br><button type="submit" class="btn btn-primary"> Go </button>
         {% elif operation_mode  == "VIEW" %}
-          {{ form.response.label_tag }} {{ form.response }} {{ form.errors }}
           <br><button type="submit" class="btn btn-primary"> Regenerate </button>
         {% endif %}
         <input type="hidden" name="operation_mode" value="{{ operation_mode }}">
