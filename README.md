@@ -11,4 +11,9 @@ Following technology stack is used:
 * Kubernetes implemetation (aimed to be used Google cloud) that contains NGinx ingress, app & database deployments, configurations and secrets (not checked in obviously)
 
 Note: the application is using submodule using actual OpenAPI implementation. The repository is private, but here is what you would need to implement on the api side:
-...
+
+```
+www.example.host/v1/suggestions/get
+```
+that receives json and returns string with suggestion.
+
