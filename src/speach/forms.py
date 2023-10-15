@@ -167,7 +167,7 @@ class PastRequestForm(ModelForm):
             attrs={
                 "class": "form-control",
                 "id": "company_name",
-            },
+            }
         )
 
         self.fields['service'].widget = MySelectWidget(
@@ -209,8 +209,14 @@ class PastRequestForm(ModelForm):
         )
 
         if operation_mode == operation_modes.VIEW:
-            for field in [f for f in self.fields if f is not None and f.widget is not None]:
-                self.fields[field].widget.attrs['disabled'] = True
+            for field in self.fields:
+                f = self.fields[field]
+                if f is None or f.widget is None:
+                    continue
+                f.widget.attrs['disabled'] = True
+                
+            # for field in [f for f in self.fields if f is not None and f.widget is not None]:
+            #     self.fields[field].widget.attrs['disabled'] = True
         if operation_mode == operation_modes.CREATE:
             self.fields['response'].widget.attrs['hidden'] = True
             self.fields['response'].label = ""
