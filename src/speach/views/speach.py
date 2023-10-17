@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from speach.models import Company, PastRequest, UserData
+from speach.models import Company, PastRequest, UserData, Service
 from django.urls import reverse
 import externals.openai as openai
 from django.shortcuts import redirect, render
@@ -45,6 +45,7 @@ def create_result_based_on_past_request(past_request: PastRequest, temperature =
     company_id = past_request.company.id
     current_user = past_request.user
     company = Company.objects.get(id=company_id)
+    service = Service.objects.get(id=past_request.service.id)
     user_data = UserData.objects.get(user=current_user.pk)
-    response =  openai.get_suggestion_from_api(company.name, company.about, past_request.request, temperature)
+    response =  openai.get_suggestion_from_api(company.name, company.about, service.name , past_request.request, temperature)
     return response

@@ -17,10 +17,11 @@ async def get_suggestion_from_api_async(company_from_name, company_from_about, c
         r = await client.post(OPEN_API_SERVICE, json=request, timeout=TIMEOUT) 
     return r.content.decode("utf-8")
 
-def get_suggestion_from_api(company_from_name, company_from_about, company_to_about, temperature = 0):
+def get_suggestion_from_api(company_from_name, company_from_about, service, company_to_about, temperature = 0):
     request = {
         "company_from_name": company_from_name,
         "company_from_about": company_from_about,
+        "service": service,
         "company_to_about": company_to_about,
         "temperature": 0
     }
