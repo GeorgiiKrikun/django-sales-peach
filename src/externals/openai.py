@@ -6,10 +6,11 @@ from django.conf import settings
 OPEN_API_SERVICE = "http://localhost:5000/suggestions/get"
 TIMEOUT=20
 
-async def get_suggestion_from_api_async(company_from_name, company_from_about, company_to_about, temperature = 0):
+async def get_suggestion_from_api_async(company_from_name, company_from_about, service, company_to_about, temperature = 0):
     request = {
         "company_from_name": company_from_name,
         "company_from_about": company_from_about,
+        "service": service,
         "company_to_about": company_to_about,
         "temperature": 0
     }
