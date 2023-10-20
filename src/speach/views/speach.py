@@ -4,11 +4,13 @@ from django.urls import reverse
 import externals.openai as openai
 from django.shortcuts import redirect, render
 from speach.forms import PastRequestForm, operation_modes
+from asgiref.sync import async_to_sync, sync_to_async
 
 
 
-
+@sync_to_async
 @login_required(login_url="authentication:login")
+@async_to_sync
 async def speach(request):
     user = request.user
     if request.method == 'POST':
