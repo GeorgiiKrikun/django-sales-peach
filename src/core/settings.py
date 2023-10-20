@@ -55,23 +55,8 @@ logger = logging.getLogger("salespeach")
 logger.info(logger.name)
 logger.setLevel(log_level)
 
-# Create a console handler
-console_handler = logging.StreamHandler()
-console_handler.setLevel(log_level)
-console_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
 
-# Create a file handler
-file_handler = logging.FileHandler('../log/salespeach.log')
-file_handler.setLevel(log_level)
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-
-LOGGER=logging.getLogger("salespeach")
-LOGGER.info(f"Logger initialized in {STAGE} mode")
-
-
-# # logging.basicConfig(filename='/var/log/salespeach/salespeach.log', encoding='utf-8', level=logging.DEBUG)
+# logging.basicConfig(filename='/var/log/salespeach/salespeach.log', encoding='utf-8', level=logging.DEBUG)
 
 
 def search_in_environment_or_docker_secrets(key : str) -> str:

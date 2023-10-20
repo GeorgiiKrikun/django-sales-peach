@@ -7,11 +7,8 @@ from speach.forms import PastRequestForm, operation_modes
 from asgiref.sync import async_to_sync, sync_to_async
 
 
-
-@sync_to_async
 @login_required(login_url="authentication:login")
-@async_to_sync
-async def speach(request):
+def speach(request):
     user = request.user
     if request.method == 'POST':
         operation_mode = operation_modes[request.POST.get('operation_mode')]
@@ -19,7 +16,7 @@ async def speach(request):
             form = PastRequestForm(request.POST, user=user)
             if form.is_valid():
                 past_request = form.save(commit=False)
-                response = await create_result_based_on_past_request(past_request)
+                response = create_result_based_on_past_request(past_request)
                 past_request.response = response
                 past_request.save()
             else:
@@ -31,7 +28,7 @@ async def speach(request):
             id = request.POST.get('id') 
             past_request = PastRequest.objects.get(id=id)
             new_temperature = min(1, past_request.temperature + 0.2)
-            response = await create_result_based_on_past_request(past_request, new_temperature)
+            response = create_result_based_on_past_request(past_request, new_temperature)
             past_request.temperature = new_temperature
             past_request.response = response
             past_request.save()
@@ -43,11 +40,11 @@ async def speach(request):
     return render(request, 'speach/speach.html', {'form': form, 'operation_mode': str(operation_modes.CREATE),
                                                   'segment': 'speach', 'id': 'none'})
 
-async def create_result_based_on_past_request(past_request: PastRequest, temperature = 0):
+def create_result_based_on_past_request(past_request: PastRequest, temperature = 0):
     company_id = past_request.company.id
     current_user = past_request.user
     company = Company.objects.get(id=company_id)
     service = Service.objects.get(id=past_request.service.id)
     user_data = UserData.objects.get(user=current_user.pk)
-    response = await openai.get_suggestion_from_api_async(company.name, company.about, service.name , past_request.request, temperature)
+    response = openai.get_suggestion_from_api(company.name, company.about, service.name , past_request.request, temperature)
     return response
