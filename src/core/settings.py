@@ -7,57 +7,6 @@ import os, environ, openai, sys
 import logging
 
 
-STAGE=os.environ.get('STAGE', 'dev')
-if STAGE == 'prod':
-    log_level = logging.ERROR
-elif STAGE == 'debug':
-    log_level = logging.DEBUG
-else:
-    log_level = logging.INFO
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "file": {
-            "level": log_level,
-            "class": "logging.FileHandler",
-            "filename": "../log/log_file_django.log",
-            "formatter": "verbose",
-        },
-        "console": {
-            "level": log_level,
-            "class": "logging.StreamHandler",
-            "formatter": "simple",
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["console", "file"],
-            "level": log_level,
-            "propagate": True,
-        },
-    },
-    "formatters": {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-            "style": "{",
-        },
-        "simple": {
-            "format": "{levelname} {message}",
-            "style": "{",
-        },
-    },
-}
-
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger("salespeach")
-logger.info(logger.name)
-logger.setLevel(log_level)
-
-
-# logging.basicConfig(filename='/var/log/salespeach/salespeach.log', encoding='utf-8', level=logging.DEBUG)
-
 
 def search_in_environment_or_docker_secrets(key : str) -> str:
     result = ""
