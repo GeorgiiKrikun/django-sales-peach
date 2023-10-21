@@ -20,10 +20,9 @@ spec:
           claimName: mysql-pv-claim
       containers:
       - name: my-sql-ini
-        image: europe-west3-docker.pkg.dev/studied-reason-374616/salespeach/mysql:latest
-        # image: my-mysql-base:latest
-        # imagePullPolicy: Never
-
+        # image: europe-west3-docker.pkg.dev/studied-reason-374616/salespeach/mysql:latest
+        image: my-mysql-base:latest
+        imagePullPolicy: Never
         command: ["bash", "-c", "while true; do echo hello; sleep 10;done"]
         ports:
         - containerPort: 3306

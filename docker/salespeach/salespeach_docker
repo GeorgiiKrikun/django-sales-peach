@@ -8,4 +8,4 @@ COPY . .
 RUN python3 manage.py collectstatic --noinput
 
 # gunicorn
-CMD python3 manage.py migrate && uvicorn core.asgi:application --port 8000 --host 0.0.0.0 --workers 13
+CMD python3 manage.py migrate --fake-initial && uvicorn core.asgi:application --port 8000 --host 0.0.0.0 --workers 13

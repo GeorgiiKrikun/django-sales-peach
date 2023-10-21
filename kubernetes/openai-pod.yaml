@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openai
+  labels:
+    app: openai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openai
+  template:
+    metadata:
+      labels:
+        app: openai
+    spec:
+      containers:
+      - name: openai_api_sales_peach
+        image: openai_api_sales_peach:latest
+        imagePullPolicy: Never
+        # image: europe-west3-docker.pkg.dev/studied-reason-374616/salespeach/mysql:latest 
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openai-svc
+spec:
+  selector:
+    app: openai
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+---
