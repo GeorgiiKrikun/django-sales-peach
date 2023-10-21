@@ -16,6 +16,10 @@ spec:
     spec:
       containers:
       - name: openai-api-sales-peach
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "1"
         image: openai_api_sales_peach:latest
         imagePullPolicy: Never
         # image: europe-west3-docker.pkg.dev/studied-reason-374616/salespeach/mysql:latest 

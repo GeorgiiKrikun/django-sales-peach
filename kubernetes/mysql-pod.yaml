@@ -21,6 +21,10 @@ spec:
       containers:
       - name: my-sql
         image: my-mysql-base:latest
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "1"
         imagePullPolicy: Never
         # image: europe-west3-docker.pkg.dev/studied-reason-374616/salespeach/mysql:latest 
         ports:

@@ -116,12 +116,14 @@ STRIPE_TEST_SECRET_KEY = search_in_environment_or_docker_secrets("STRIPE_TEST_SE
 print("STRIPE_TEST_SECRET_KEY " + STRIPE_TEST_SECRET_KEY)
 logging.info("STRIPE_TEST_SECRET_KEY " + STRIPE_TEST_SECRET_KEY)
 
-openai.api_key = search_in_environment_or_docker_secrets("OPENAI_API_KEY")
+openai.api_key = "deprecated"
 STRIPE_LIVE_MODE = False
 DJSTRIPE_WEBHOOK_SECRET = os.getenv('DJSTRIPE_WEBHOOK_SECRET','NO_SECRETS')  # We don't use this, but it must be set
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 if DEBUG:
     DJSTRIPE_WEBHOOK_VALIDATION = 'retrieve_event'
+
+OPEN_API_SERVICE = os.environ.get('OPEN_API_SERVICE', 'http://localhost:5000/')
 
 
 WSGI_APPLICATION = 'core.wsgi.application'

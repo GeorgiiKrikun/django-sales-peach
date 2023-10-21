@@ -21,6 +21,10 @@ spec:
         # image: europe-west3-docker.pkg.dev/studied-reason-374616/salespeach/salespeach:latest
         # args: ["python3 manage.py migrate --fake-initial", "&&", "uvicorn core.asgi:application --port 8000 --host 0.0.0.0 --workers 13"]
         # args: ["bash", "-c", "while true; do echo hello; sleep 10;done"]
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "1"
         ports:
         - containerPort: 8000
         env:
@@ -79,6 +83,11 @@ spec:
             configMapKeyRef:
               name: salespeach-conf
               key: db_host
+        - name: OPEN_API_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              name: salespeach-conf
+              key: openai_service
 
 ---
 apiVersion: v1
