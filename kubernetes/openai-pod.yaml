@@ -15,25 +15,24 @@ spec:
         app: openai
     spec:
       containers:
-      - name: openai_api_sales_peach
+      - name: openai-api-sales-peach
         image: openai_api_sales_peach:latest
         imagePullPolicy: Never
         # image: europe-west3-docker.pkg.dev/studied-reason-374616/salespeach/mysql:latest 
         ports:
-        - containerPort: 3306
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
+        - containerPort: 8000
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: openai-svc
 spec:
+  # type: NodePort
   selector:
     app: openai
   ports:
     - protocol: TCP
-      port: 8000
+      port: 8080
       targetPort: 8000
+      # nodePort: 30099
 ---
