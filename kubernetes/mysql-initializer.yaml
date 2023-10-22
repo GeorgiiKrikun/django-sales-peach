@@ -26,6 +26,13 @@ spec:
         command: ["bash", "-c", "while true; do echo hello; sleep 10;done"]
         ports:
         - containerPort: 3306
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "500m"
+            memory: "500Mi"
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql

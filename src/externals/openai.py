@@ -26,5 +26,5 @@ def get_suggestion_from_api(company_from_name, company_from_about, service, comp
         "temperature": temperature,
     }
     r = requests.post(settings.OPEN_API_SERVICE+"suggestions/get", json=request, timeout=TIMEOUT) 
-    print(settings.OPEN_API_SERVICE)
+    # print(settings.OPEN_API_SERVICE)
     return r.content.decode("utf-8")
