@@ -23,7 +23,7 @@ SECRET_KEY = env('SECRET_KEY', default='S#perS3crEt_007')
 DEBUG = env('DEBUG')
 
 # Assets Management
-ASSETS_ROOT = env('ASSETS_ROOT', '/static/assets') 
+ASSETS_ROOT = env('ASSETS_ROOT') 
 
 # load production server from .env
 ALLOWED_HOSTS        = ['localhost', 'salespeach', 'localhost:85', '192.168.49.2', '127.0.0.1', '34.159.127.226', '0.0.0.0', '10.0.0.18', 'www.salespeach.org', env('SERVER', default='127.0.0.1') ]
