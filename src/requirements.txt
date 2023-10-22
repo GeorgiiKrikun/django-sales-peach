@@ -12,7 +12,6 @@ django-environ==0.8.1
 django-allauth==0.51.0
 django-sslserver==0.22
 dj-stripe==2.7.3
-django-payments==2.0.0
 openai==0.27.8
 six==1.16.0
 mysqlclient==2.1.1
