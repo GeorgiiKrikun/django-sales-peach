@@ -7,7 +7,6 @@ Copyright (c) 2019 - present AppSeed.us
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm, SignUpForm, EnterEmailForPasswordResetForm, ResetPasswordForm
-from core.settings import GITHUB_AUTH
 from django.template import loader
 from django.http import HttpResponse
 from django.contrib.auth.models import User
@@ -41,7 +40,7 @@ def login_view(request):
             messages.error(request, 'Error validating the login form')
 
     html_template = loader.get_template('authentication/login.html')
-    context = {"form": form,  "GITHUB_AUTH": GITHUB_AUTH}
+    context = {"form": form}
     return HttpResponse(html_template.render(context, request))
 
 def logout_view(request):

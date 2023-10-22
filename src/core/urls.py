@@ -10,8 +10,6 @@ from django.urls import path, include, reverse  # add this
 urlpatterns = [
     path('admin/', admin.site.urls),  # Django admin route
     path("auth/", include("apps.authentication.urls")), # Auth routes - login / register
-    # ADD NEW Routes HERE
-    path('payments/', include('payments.urls')),
     # Leave `Home.Urls` as last the last line
     path("speach/", include("speach.urls")),
     path("finished_registration/", RedirectView.as_view(url='/speach/finished_registration', permanent=False)),
