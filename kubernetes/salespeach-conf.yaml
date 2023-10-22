@@ -6,4 +6,5 @@ data:
   db_engine: "mysql"
   debug: "True"
   db_host: "mysql-svc"
+  openai_service: "http://openai-svc:8080/"
 

@@ -4,8 +4,7 @@ from django.urls import reverse
 import externals.openai as openai
 from django.shortcuts import redirect, render
 from speach.forms import PastRequestForm, operation_modes
-
-
+from asgiref.sync import async_to_sync, sync_to_async
 
 
 @login_required(login_url="authentication:login")
@@ -47,5 +46,5 @@ def create_result_based_on_past_request(past_request: PastRequest, temperature =
     company = Company.objects.get(id=company_id)
     service = Service.objects.get(id=past_request.service.id)
     user_data = UserData.objects.get(user=current_user.pk)
-    response =  openai.get_suggestion_from_api(company.name, company.about, service.name , past_request.request, temperature)
+    response = openai.get_suggestion_from_api(company.name, company.about, service.name , past_request.request, temperature)
     return response

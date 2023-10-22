@@ -5,10 +5,7 @@ from django.forms.utils import ErrorList
 from speach.models import PastRequest, Company, Feedback, FeedbackTopic, Service
 from django.forms import *
 from enum import Enum
-# import logging
-# import os
-# logger = logging.getLogger(os.getenv("STAGE","dev"))
-from core.settings import LOGGER
+import logging
 
 class MySelectWidget(Widget):
     def __init__(self, attrs=... ) -> None:
@@ -161,7 +158,7 @@ class PastRequestForm(ModelForm):
 
         super().__init__(*args, **kwargs)
 
-        LOGGER.warning(self.fields)
+        logging.warning(self.fields)
 
         self.fields['company'].widget = Select(
             attrs={

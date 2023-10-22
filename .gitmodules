@@ -1,0 +1,3 @@
+[submodule "sales-peach-OpenAPI"]
+	path = sales-peach-OpenAPI
+	url = https://github.com/GeorgiiKrikun/sales-peach-OpenAPI
