@@ -1,4 +1,3 @@
-server_tokens               off;
 access_log                  /var/log/nginx/supersecure.access.log;
 error_log                   /var/log/nginx/supersecure.error.log;
 
