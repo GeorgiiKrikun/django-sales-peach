@@ -13,4 +13,8 @@ done
 
 workdir=$SP_HOME/docker/nginx
 
+echo "Collecting static files"
+python3 $SP_HOME/src/manage.py collectstatic --noinput
+cp -rv $SP_HOME/src/staticfiles/ $workdir/staticfiles
+
 docker build $no_cache -t salespeach_nginx:latest $workdir -f $workdir/nginx_docker
