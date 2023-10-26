@@ -109,26 +109,17 @@ OPEN_API_SERVICE = os.environ.get('OPEN_API_SERVICE', 'http://localhost:5000/')
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-if os.environ.get('DB_ENGINE') and os.environ.get('DB_ENGINE') == "mysql":
-    logging.info("Using MySQL database")
-    DATABASES = { 
-      'default': {
-        'ENGINE'  : 'django.db.backends.mysql', 
-        'NAME'    : os.getenv('DB_NAME'     , 'appseed_db'),
-        'USER'    : os.getenv('DB_USERNAME' , 'appseed_db_usr'),
-        'PASSWORD': os.getenv('DB_PASS'     , 'pass'),
-        'HOST'    : os.getenv('DB_HOST'     , 'mysql-server'),
-        'PORT'    : os.getenv('DB_PORT'     , 3306),
-        }, 
-    }
-else:
-    logging.info("Using SQLite database")
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'db.sqlite3',
-        }
-    }
+logging.info("Using MySQL database")
+DATABASES = { 
+    'default': {
+    'ENGINE'  : 'django.db.backends.mysql', 
+    'NAME'    : os.getenv('DB_NAME'     , 'appseed_db'),
+    'USER'    : os.getenv('DB_USERNAME' , 'appseed_db_usr'),
+    'PASSWORD': os.getenv('DB_PASS'     , 'pass'),
+    'HOST'    : os.getenv('DB_HOST'     , 'mysql-server'),
+    'PORT'    : os.getenv('DB_PORT'     , 3306),
+    }, 
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
