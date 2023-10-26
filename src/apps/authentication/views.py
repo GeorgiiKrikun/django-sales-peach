@@ -20,6 +20,7 @@ from .tokens import account_activation_token,password_reset_token
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
+from core.settings import DEVELOPMENT
 
 def login_view(request):
     form = LoginForm(request.POST or None)
@@ -47,10 +48,12 @@ def logout_view(request):
     logout(request)
     return redirect("authentication:login")
 
-
 def register_user(request):
     msg = None
     success = False
+    if DEVELOPMENT:
+        messages.error(request, 'Registration is not available in development mode')
+        return redirect(reverse('authentication:login'))
 
     if request.method == "POST":
         form = SignUpForm(request.POST)
@@ -75,8 +78,6 @@ def register_user(request):
         form = SignUpForm()
 
     return render(request, "authentication/register.html", {"form": form, "success": success})
-
-
 
 def activate(request, uidb64, token):
     try:
@@ -122,9 +123,6 @@ def send_reset_password_email(request, user, to_email):
     messages.info(request, f'If the e-mail provided exists, we will send you confirmation link to reset your password.')
     email = EmailMessage(mail_subject, message, to=[to_email])
     return email.send()
-
-
-
 
 def reset_password(request):
     if request.method == "GET":

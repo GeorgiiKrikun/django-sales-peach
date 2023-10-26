@@ -9,6 +9,7 @@ import logging
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, True),
+    DEVELOPMENT=(bool, True), # Block new registrations
     ASSETS_ROOT=(str, "/static/assets")
 )
 
@@ -24,6 +25,9 @@ DEBUG = env('DEBUG')
 
 # Assets Management
 ASSETS_ROOT = env('ASSETS_ROOT') 
+
+#Development mode
+DEVELOPMENT= env('DEVELOPMENT')
 
 # load production server from .env
 ALLOWED_HOSTS        = ['localhost', 'salespeach', 'localhost:85', '192.168.49.2', '127.0.0.1', '34.159.127.226', '0.0.0.0', '10.0.0.18', 'www.salespeach.org', env('SERVER', default='127.0.0.1') ]

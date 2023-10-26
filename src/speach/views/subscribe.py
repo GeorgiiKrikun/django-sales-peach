@@ -63,8 +63,6 @@ def change_subscription(request):
         time.sleep(2)
     return redirect(reverse('speach:select_subscriptions'), context = {'segment': 'payments'})
 
-
-
 @login_required(login_url="authentication:login")
 def confirm_subscription_cancel(request):
     return render(request, 'subscriptions/confirm_subscription_cancel.html', {'segment': 'payments'})
