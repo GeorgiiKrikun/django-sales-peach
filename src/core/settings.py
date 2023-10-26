@@ -9,6 +9,7 @@ import logging
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, True),
+    DEVELOPMENT=(bool, True), # Block new registrations
     ASSETS_ROOT=(str, "/static/assets")
 )
 
@@ -24,6 +25,9 @@ DEBUG = env('DEBUG')
 
 # Assets Management
 ASSETS_ROOT = env('ASSETS_ROOT') 
+
+#Development mode
+DEVELOPMENT= env('DEVELOPMENT')
 
 # load production server from .env
 ALLOWED_HOSTS        = ['localhost', 'salespeach', 'localhost:85', '192.168.49.2', '127.0.0.1', '34.159.127.226', '0.0.0.0', '10.0.0.18', 'www.salespeach.org', env('SERVER', default='127.0.0.1') ]
@@ -105,26 +109,17 @@ OPEN_API_SERVICE = os.environ.get('OPEN_API_SERVICE', 'http://localhost:5000/')
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-if os.environ.get('DB_ENGINE') and os.environ.get('DB_ENGINE') == "mysql":
-    logging.info("Using MySQL database")
-    DATABASES = { 
-      'default': {
-        'ENGINE'  : 'django.db.backends.mysql', 
-        'NAME'    : os.getenv('DB_NAME'     , 'appseed_db'),
-        'USER'    : os.getenv('DB_USERNAME' , 'appseed_db_usr'),
-        'PASSWORD': os.getenv('DB_PASS'     , 'pass'),
-        'HOST'    : os.getenv('DB_HOST'     , 'mysql-server'),
-        'PORT'    : os.getenv('DB_PORT'     , 3306),
-        }, 
-    }
-else:
-    logging.info("Using SQLite database")
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'db.sqlite3',
-        }
-    }
+logging.info("Using MySQL database")
+DATABASES = { 
+    'default': {
+    'ENGINE'  : 'django.db.backends.mysql', 
+    'NAME'    : os.getenv('DB_NAME'     , 'appseed_db'),
+    'USER'    : os.getenv('DB_USERNAME' , 'appseed_db_usr'),
+    'PASSWORD': os.getenv('DB_PASS'     , 'pass'),
+    'HOST'    : os.getenv('DB_HOST'     , 'mysql-server'),
+    'PORT'    : os.getenv('DB_PORT'     , 3306),
+    }, 
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

@@ -10,6 +10,7 @@ import os
 import logging
 from djstripe import webhooks
 import time
+from django.contrib import messages
 
 logger=logging.getLogger(__name__)
 
@@ -62,8 +63,6 @@ def change_subscription(request):
         )
         time.sleep(2)
     return redirect(reverse('speach:select_subscriptions'), context = {'segment': 'payments'})
-
-
 
 @login_required(login_url="authentication:login")
 def confirm_subscription_cancel(request):
@@ -118,7 +117,12 @@ def subscription_selected(request):
 
         payment_methods_exists = PaymentMethod.objects.filter(customer=customer.id).exists()
         if payment_methods_exists:
-            customer.subscribe(items=[{'price': price}])
+            try:
+                customer.subscribe(items=[{'price': price}])
+            except:
+                messages.error(request, f"Something went wrong. Try to reattach payment method.")
+                return redirect(reverse('speach:payment_methods'))
+
         else:
             return redirect(reverse('speach:payment_methods'))
     time.sleep(2)
