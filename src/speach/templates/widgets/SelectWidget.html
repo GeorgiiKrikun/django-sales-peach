@@ -1,5 +1,5 @@
 <select name={{ widget.name }} {% include "django/forms/widgets/attrs.html" %}>
     {% for opt in opts %}
-        <option value={{opt.value}} label={{opt.label}} additional={{ opt.additional }}>{{opt.label}}</option>
+        <option value="{{opt.value}}" label="{{opt.label}}" additional="{{ opt.additional }}">"{{opt.label}}"</option>
     {% endfor %}  
 </select>
