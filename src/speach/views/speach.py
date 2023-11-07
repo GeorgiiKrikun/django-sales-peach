@@ -1,3 +1,4 @@
+from datetime import timezone
 from django.contrib.auth.decorators import login_required
 from speach.models import Company, PastRequest, UserData, Service
 from django.urls import reverse
@@ -5,18 +6,26 @@ import externals.openai as openai
 from django.shortcuts import redirect, render
 from speach.forms import PastRequestForm, operation_modes
 from asgiref.sync import async_to_sync, sync_to_async
-
+from speach.views.subscribe import get_active_subscriptions
+from django.contrib import messages
 
 @login_required(login_url="authentication:login")
 def speach(request):
     user = request.user
+    userdata = UserData.objects.get(user=user.pk)
+    if (userdata.uses_left <= 0):
+        messages.error(request, 'You have no uses left. Please subscribe to get more uses.')
     if request.method == 'POST':
+        if (userdata.uses_left <= 0):
+            return redirect(reverse('speach:speach'))
         operation_mode = operation_modes[request.POST.get('operation_mode')]
         if operation_mode == operation_modes.CREATE:
             form = PastRequestForm(request.POST, user=user)
             if form.is_valid():
                 past_request = form.save(commit=False)
                 response = create_result_based_on_past_request(past_request)
+                userdata.uses_left -= 1
+                userdata.save()
                 past_request.response = response
                 past_request.save()
             else:
@@ -29,6 +38,8 @@ def speach(request):
             past_request = PastRequest.objects.get(id=id)
             new_temperature = min(1, past_request.temperature + 0.2)
             response = create_result_based_on_past_request(past_request, new_temperature)
+            userdata.uses_left -= 1
+            userdata.save()
             past_request.temperature = new_temperature
             past_request.response = response
             past_request.save()

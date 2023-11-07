@@ -142,5 +142,16 @@ def payment_method_attached(event):
     except Customer.DoesNotExist or PaymentMethod.DoesNotExist:
         logger.error(f"Customer {event.customer.id} or PaymentMethod {event.data.object.id}does not exist")
 
+@webhooks.handler('invoice.payment_succeeded')
+def payment_succeeded(event):
+    customer = event.customer
+    userData = UserData.objects.get(customer=customer)
+    subscription_id = event.data['object']['subscription']
+    subscription = Subscription.objects.get(id=subscription_id)
+    new_uses = subscription.plan.product.metadata["use_pm"]
+    userData.uses_left = int(new_uses)
+    userData.save()
+
+
 
     

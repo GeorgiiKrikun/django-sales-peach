@@ -27,6 +27,7 @@ class UserData(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
     latest_company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     email_confirmed = models.BooleanField(default=False) #NOT NEEDED TODO: REMOVE
+    uses_left = models.IntegerField(default=0)
     def __str__(self):
         return self.user.username + " " + self.email_confirmed
 
