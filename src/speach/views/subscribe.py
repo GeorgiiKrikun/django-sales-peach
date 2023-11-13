@@ -25,6 +25,8 @@ def get_active_subscriptions(user):
 @login_required(login_url="authentication:login")
 def select_subscriptions(request):
     active_subscriptions = get_active_subscriptions(request.user.pk)
+    userdata = UserData.objects.get(user=request.user.pk)
+
     has_subscription, subscription = False, None
     if (active_subscriptions.exists()):
         has_subscription=True
@@ -41,33 +43,14 @@ def select_subscriptions(request):
     if has_subscription:
         context['active_price'] = SubscriptionItem.objects.get(subscription=subscription.id).price
         context['active_product'] = context['active_price'].product
+    
+    context['remaining_uses'] = userdata.uses_left
     return render(request, 'subscriptions/select_subscriptions.html', context)
-
-@login_required(login_url="authentication:login")
-def change_subscription(request):
-    active_subscription = get_active_subscriptions(request.user.pk).first()
-    if request.method == 'POST':
-        price_id = request.POST.get('price_id')
-        price = Price.objects.get(id=price_id)
-        userData = UserData.objects.get(user=request.user.pk)
-        customer = Customer.objects.get(id=userData.customer.id)
-        subscription = stripe.Subscription.retrieve(active_subscription.id)
-        stripe.Subscription.modify(
-            subscription.id,
-            cancel_at_period_end=False,
-            proration_behavior='create_prorations',
-            items=[{
-                'id': subscription['items']['data'][0].id,
-                'price': price_id,
-            }]
-        )
-        time.sleep(2)
-    return redirect(reverse('speach:select_subscriptions'), context = {'segment': 'payments'})
 
 @login_required(login_url="authentication:login")
 def confirm_subscription_cancel(request):
     return render(request, 'subscriptions/confirm_subscription_cancel.html', {'segment': 'payments'})
-    
+
 
 @login_required(login_url="authentication:login")
 def payment_methods(request):
@@ -102,6 +85,11 @@ def active_subscriptions(request):
 
 @login_required(login_url="authentication:login")
 def cancel_subscription(request):
+    userdata = UserData.objects.get(user=request.user.pk)
+    userdata.bonus_uses += userdata.uses_left
+    userdata.uses_left = 0
+    userdata.save()
+
     subscriptions = get_active_subscriptions(request.user.pk)
     for subscription in subscriptions:
         subscription.cancel()
@@ -142,7 +130,7 @@ def payment_method_attached(event):
     except Customer.DoesNotExist or PaymentMethod.DoesNotExist:
         logger.error(f"Customer {event.customer.id} or PaymentMethod {event.data.object.id}does not exist")
 
-@webhooks.handler('invoice.payment_succeeded')
+@webhooks.handler('invoice.paid')
 def payment_succeeded(event):
     customer = event.customer
     userData = UserData.objects.get(customer=customer)
@@ -150,8 +138,19 @@ def payment_succeeded(event):
     subscription = Subscription.objects.get(id=subscription_id)
     new_uses = subscription.plan.product.metadata["use_pm"]
     userData.uses_left = int(new_uses)
+    if userData.bonus_uses > 0:
+        userData.uses_left += userData.bonus_uses
+        userData.bonus_uses = 0
     userData.save()
 
+@webhooks.handler('customer.subscription.updated')
+def subscription_updated(event):
+    print(event)
 
-
+@webhooks.handler('customer.subscription.deleted')
+def subscription_deleted(event):
+    customer = event.customer
+    userData = UserData.objects.get(customer=customer)
+    userData.uses_left = 0
+    userData.save()
     

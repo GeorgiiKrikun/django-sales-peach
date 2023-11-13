@@ -28,8 +28,9 @@ class UserData(models.Model):
     latest_company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     email_confirmed = models.BooleanField(default=False) #NOT NEEDED TODO: REMOVE
     uses_left = models.IntegerField(default=0)
+    bonus_uses = models.IntegerField(default=0)
     def __str__(self):
-        return self.user.username + " " + self.email_confirmed
+        return self.user.username
 
 class PastRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
