@@ -1,4 +1,4 @@
-.columns {
+/* .columns {
     float: left;
     width: 33.3%;
     padding: 8px;
@@ -38,7 +38,37 @@
     background-color: #eee;
     font-size: 20px;
   }
+  */
+
+  .subscriptions-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    list-style: none; 
+  }
   
+  .subscriptions-list li {
+    flex: 0.2;
+    box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
+    list-style-type: none; 
+    border: 0px; 
+    transition: 0.3s; 
+    text-align: center;
+    padding: 20px;
+    margin: 20px;
+  } 
+
+  .subscriptions-list li .header {
+    /* background-color: #9c6b6b; */
+    color: white;
+    font-size: 25px;
+  }
+  
+    
+  .subscriptions-list li:hover {
+    box-shadow: 0 0px 0px 0 rgba(0,0,0,0.2)
+  }
+
   .button {
     background-color: #04AA6D;
     border: none;
@@ -47,4 +77,31 @@
     text-align: center;
     text-decoration: none;
     font-size: 18px;
+  } 
+
+  .button:hover {
+    cursor: pointer;
   }
+
+
+  /* .flex-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  
+  .flex-item {
+    background: tomato;
+    padding: 5px;
+    width: 200px;
+    height: 150px;
+    margin-top: 10px;
+    line-height: 150px;
+    color: white;
+    font-weight: bold;
+    font-size: 3em;
+    text-align: center;
+  } */
