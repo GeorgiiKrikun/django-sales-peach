@@ -45,6 +45,13 @@ def select_subscriptions(request):
         context['active_product'] = context['active_price'].product
     
     context['remaining_uses'] = userdata.uses_left
+
+    payment_methods_data = PaymentMethod.objects.filter(customer=userdata.customer.id)
+    payment_methods = []
+    for payment_method in payment_methods_data:
+        payment_methods.append({"type" : payment_method.type.capitalize(), "name" : payment_method.billing_details.get("name")})
+    context['payment_methods'] = payment_methods
+
     return render(request, 'subscriptions/select_subscriptions.html', context)
 
 @login_required(login_url="authentication:login")

@@ -1,45 +1,3 @@
-/* .columns {
-    float: left;
-    width: 33.3%;
-    padding: 8px;
-
-  }
-  
-  .price {
-    box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
-    list-style-type: none;
-    border: 0px;
-    margin: 0;
-    padding: 0;
-    -webkit-transition: 0.3s;
-    transition: 0.3s;
-  }
-  
-  .price:hover {
-    box-shadow: 0 0px 0px 0 rgba(0,0,0,0.2)
-  }
-  
-  .price .header {
-    background-color: #9c6b6b;
-    color: white;
-    font-size: 25px;
-  }
-  .price .test_color {
-    background-color: #e61c5c;
-  }
-  
-  .price li {
-    border-bottom: 1px solid #eee;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .price .grey {
-    background-color: #eee;
-    font-size: 20px;
-  }
-  */
-
   .subscriptions-list {
     display: flex;
     flex-direction: row;
@@ -61,6 +19,11 @@
   .subscriptions-list li .header {
     /* background-color: #9c6b6b; */
     color: white;
+    font-size: 25px;
+  }
+
+  .remaining-uses {
+    float: right;
     font-size: 25px;
   }
   
