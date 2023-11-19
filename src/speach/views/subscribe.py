@@ -133,6 +133,12 @@ def payment_method_attached(event):
             customer.id,
             invoice_settings={'default_payment_method': payment_method.id}
         )
+        # Go over older payment methods and remove them
+        payment_methods = PaymentMethod.objects.filter(customer=customer.id)
+        for payment_method in payment_methods:
+            if payment_method.id != event.data['object']['id']:
+                payment_method.delete()
+        
         
     except Customer.DoesNotExist or PaymentMethod.DoesNotExist:
         logger.error(f"Customer {event.customer.id} or PaymentMethod {event.data.object.id}does not exist")

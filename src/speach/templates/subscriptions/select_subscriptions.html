@@ -15,7 +15,7 @@
       <h3 class="remaining-uses"> Remaining uses with current plan: {{ remaining_uses }}</h3>
       {% comment %} <h3> Pricing Plans </h3> {% endcomment %}
         {% if has_subscription %}
-          <ul class="subscriptions-list" style="background-color: {{ active_product.metadata.background_color }};" >
+          <ul class="subscriptions-list" >
             <li style="background-color: {{ active_product.metadata.background_color }};">
               <p class="header">{{ active_product.name }}</p>
               <br><br>

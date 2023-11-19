@@ -5,6 +5,7 @@
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}
 <link rel="stylesheet" href="{{ ASSETS_ROOT }}/css/buttons.css">
+<link rel="stylesheet" href="{{ ASSETS_ROOT }}/css/tooltip.css">
 {% endblock stylesheets %}
 
 {% block content %}
@@ -12,7 +13,6 @@
 
 
 <input type="hidden" id="selected_id" value="{{selected_id}}">
-
 <div class="pcoded-main-container">
     <div class="pcoded-wrapper">
         <div class="pcoded-content">
@@ -45,9 +45,14 @@
                                                 <p> SERVICES: </p>
                                                 <p>
                                                     {% for service in company.services %}
-                                                        <a href={% url 'speach:add_service' company.company.id service.id %}>{{service.name}}</a>, 
+                                                        <div class="my-tooltip">
+                                                            <a href={% url 'speach:add_service' company.company.id service.id %}>
+                                                                <b>{{service.name}},</b>
+                                                            </a>
+                                                            <span class="my-tooltiptext">{{ service.about }}</span>
+                                                        </div>
                                                     {% endfor %}
-                                                    <a href={% url 'speach:add_service' company.company.id  %}>Add new</a> 
+                                                    <a href={% url 'speach:add_service' company.company.id  %}><b>Add new</b></a> 
                                                 
                                                 </p>
                                                 <input type="submit" name="submit" class="btn btn-primary" value="Edit" />
@@ -58,6 +63,7 @@
                                     {% endfor %}
                                 </div>
                             </div>
+
                         </div>
             </div>
         </div>

@@ -101,38 +101,6 @@ def add_service(request, company_id: int, service_id: int = None):
                     return redirect(reverse('speach:companies'))
         
         return redirect(reverse('speach:companies'))
-
-        # if request.method == 'POST':
-
-        
-
-
-
-        # elif request.POST['submit'] == 'Edit':
-        #     id = request.POST['company_id']
-        #     company = Company.objects.get(id=id)
-        #     form = CompanyForm(instance = company, user=user, operation_mode=operation_modes.UPDATE)
-        #     return render(request, 'companies/company.html', {'form': form, 'operation_mode': str(operation_modes.UPDATE),
-        #                                                       'id': id})
-        # elif request.POST['submit'] == 'Save':
-        #     if Service.objects.filter(id=request.POST['service_id']).exists():
-        #         service = Service.objects.get(id=request.POST['service_id'])
-        #     else:
-        #         service = Service()
-
-        #     form = ServiceForm(request.POST, user=user,  instance = service)
-        #     if form.is_valid():
-        #         company = form.save(commit=True)
-        #         company.save()
-        #         return redirect(reverse('speach:companies'))
-        #     else:
-        #         raise ValueError("Form is not valid")
-        # elif request.POST['submit'] == 'Delete':
-        #     company = Company.objects.get(id=request.POST['company_id'])
-        #     company.delete()
-        #     return redirect(reverse('speach:companies'))
-        # else:
-        #     raise ValueError("Unknown submit value")
         
 
 
