@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from djstripe.models import Product, Price, Customer, PaymentMethod, Subscription, SubscriptionItem
-from speach.models import UserData
+from speach.models import DiscountCode, UserData
 from django.shortcuts import render, redirect
 import stripe
 import os
@@ -11,6 +11,7 @@ import logging
 from djstripe import webhooks
 import time
 from django.contrib import messages
+from speach.forms import EnterDiscountCodeForm, operation_modes
 
 logger=logging.getLogger(__name__)
 
@@ -58,6 +59,44 @@ def select_subscriptions(request):
 def confirm_subscription_cancel(request):
     return render(request, 'subscriptions/confirm_subscription_cancel.html', {'segment': 'payments'})
 
+@login_required(login_url="authentication:login")
+def redeem_coupon(request):
+    form = EnterDiscountCodeForm()
+    return render(request, 'subscriptions/redeem_coupon.html', {'form': form, 'segment': 'payments'})
+
+@login_required(login_url="authentication:login")
+def redeemed_coupon(request):
+    if request.method == 'GET':
+        return redirect(reverse('speach:redeem_coupon'))
+    if request.method == 'POST':
+        form = EnterDiscountCodeForm(request.POST)
+        if form.is_valid():
+            discount_code = form.cleaned_data.get("discount_code", None)
+            existing_codes = DiscountCode.objects.filter(code = discount_code)
+            redeemed_code = None
+            for code in existing_codes:
+                if not code.was_used:
+                    code.was_used = True
+                    code.user_redeemed = request.user
+                    code.save()
+                    redeemed_code = code
+                    break
+            if redeemed_code is None:
+                messages.error(request, f"Invalid code")
+                return redirect(reverse('speach:redeem_coupon'))
+            else:
+                userdata = UserData.objects.get(user=request.user.pk)
+                userdata.bonus_uses += redeemed_code.uses_given
+                userdata.uses_left += redeemed_code.uses_given
+                userdata.save()
+
+                messages.success(request, f"Code redeemed successfully")
+                return redirect(reverse('speach:select_subscriptions'))
+        else:
+            messages.error(request, f"Invalid code")
+            return redirect(reverse('speach:redeem_coupon'))
+
+
 
 @login_required(login_url="authentication:login")
 def payment_methods(request):
@@ -76,10 +115,6 @@ def payment_methods(request):
             return HttpResponseRedirect(session.url)
     
     return HttpResponseRedirect(reverse('speach:speach', args=()))
-
-
-
-
 
 @login_required(login_url="authentication:login")
 def active_subscriptions(request):

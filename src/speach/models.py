@@ -58,7 +58,7 @@ class DiscountCode(models.Model):
         return f"{code[:4]}-{code[4:8]}-{code[8:12]}-{code[12:16]}"
 
     def display_code_to_code(display_code: str) -> str:
-        return display_code.replace("-", "")
+        return display_code.replace("-", "").replace(" ", "")
     
     def admin_code_view(self):
         return DiscountCode.code_to_display_code(self.code)
