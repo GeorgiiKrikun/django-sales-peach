@@ -12,43 +12,53 @@
 
 <div class="pcoded-main-container">
   <div class="pcoded-content">
-    <div class="subscriptions">
-      <h2>Pricing Plans</h2>
-        {% for product in products %}
-          <div class="columns">
-            <ul class='price' style="background-color: {{ product.product.metadata.background_color }};" >
-              <li style="font-size: 25px; color: #000000; font-weight: bold;">{{ product.product.name }}
+      <h3 class="remaining-uses"> Remaining uses with current plan: {{ remaining_uses }}</h3>
+      {% comment %} <h3> Pricing Plans </h3> {% endcomment %}
+        {% if has_subscription %}
+          <ul class="subscriptions-list" >
+            <li style="background-color: {{ active_product.metadata.background_color }};">
+              <p class="header">{{ active_product.name }}</p>
+              <br><br>
+              <p style="font-size: 15px; color: #000000;">{{ active_product.metadata.description }}</p>
+                <form action="{% url 'speach:confirm_subscription_cancel' %}" method="POST">  
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Cancel subscription</button>
+                </form>
+            </li>
+          </ul>
+        {% else %}
+          <ul class="subscriptions-list" >
+            {% for product in products%}
+              <li style="background-color: {{ product.product.metadata.background_color }};">
+                <p class="header"> {{ product.product.name }}</p>
                 <br><br>
                 <p style="font-size: 15px; color: #000000;">{{ product.product.metadata.description }}</p>
-                {% for price in product.prices %}
-                  {% if has_subscription %}
-                    {% if price == active_price %}
-                      <form action="{% url 'speach:confirm_subscription_cancel' %}" method="POST">  
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Cancel subscription</button>
-                      </form>
-                    {% else %}
-                      <form action="{% url 'speach:change_subscription' %}" method="POST">  
-                        {% csrf_token %}
-                        <input type="hidden" name="price_id" value="{{ price.id }}" />
-                        <button type="submit" class="button">{{ price.human_readable_price }}</button>
-                      </form>
-                    {% endif %}
-                  {% else %}
+                  {% for price in product.prices %}
                     <form action="{% url 'speach:subscription_selected' %}" method="POST">  
                       {% csrf_token %}
                       <input type="hidden" name="price_id" value="{{ price.id }}" />
                       <button type="submit" class="button">{{ price.human_readable_price }}</button>
                     </form>
-                  {% endif %}
-                {% endfor %}
-              </li>
-            </ul>
-          </div>
-        {% endfor %}
+                  {% endfor %} 
+                </li>
+            {% endfor %}
+          </ul>
 
-      <br>
+        {% endif %}
+
+      <h3> Current payment method </h3> 
+      {% for method in payment_methods%}
+        <p> {{method.type}} # {{ method.name}}</p>
+      {% endfor %}
+      <a href="{% url 'speach:payment_methods' %}" class="btn btn-primary">Change payment method</a>
+      </ul>
+      <h3> Redeem a coupon </h3>
+      <a href="{% url 'speach:redeem_coupon' %}" class="btn btn-primary">Redeem</a>
   </div>
+</div>
+
+  </div>
+
 </div>
 
 

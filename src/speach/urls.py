@@ -22,7 +22,11 @@ urlpatterns = [
     path('payment_methods', subscribe.payment_methods , name='payment_methods'),
     path('cancel_subscription', subscribe.cancel_subscription , name='cancel_subscription'),
     path('confirm_subscription_cancel', subscribe.confirm_subscription_cancel , name='confirm_subscription_cancel'),
-    path('change_subscription', subscribe.change_subscription , name='change_subscription'),
+    path('redeem_coupon', subscribe.redeem_coupon , name='redeem_coupon'),
+    path('redeemed_coupon', subscribe.redeemed_coupon , name='redeemed_coupon'),
+
+    # path('change_subscription', subscribe.change_subscription , name='change_subscription'),
+
     
     # #Speach
     path('', speach.speach, name='speach'),

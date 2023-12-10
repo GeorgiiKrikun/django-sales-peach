@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from djstripe.models import Product, Price, Customer, PaymentMethod, Subscription, SubscriptionItem
-from speach.models import UserData
+from speach.models import DiscountCode, UserData
 from django.shortcuts import render, redirect
 import stripe
 import os
@@ -11,6 +11,7 @@ import logging
 from djstripe import webhooks
 import time
 from django.contrib import messages
+from speach.forms import EnterDiscountCodeForm, operation_modes
 
 logger=logging.getLogger(__name__)
 
@@ -25,6 +26,8 @@ def get_active_subscriptions(user):
 @login_required(login_url="authentication:login")
 def select_subscriptions(request):
     active_subscriptions = get_active_subscriptions(request.user.pk)
+    userdata = UserData.objects.get(user=request.user.pk)
+
     has_subscription, subscription = False, None
     if (active_subscriptions.exists()):
         has_subscription=True
@@ -41,33 +44,59 @@ def select_subscriptions(request):
     if has_subscription:
         context['active_price'] = SubscriptionItem.objects.get(subscription=subscription.id).price
         context['active_product'] = context['active_price'].product
-    return render(request, 'subscriptions/select_subscriptions.html', context)
+    
+    context['remaining_uses'] = userdata.uses_left
 
-@login_required(login_url="authentication:login")
-def change_subscription(request):
-    active_subscription = get_active_subscriptions(request.user.pk).first()
-    if request.method == 'POST':
-        price_id = request.POST.get('price_id')
-        price = Price.objects.get(id=price_id)
-        userData = UserData.objects.get(user=request.user.pk)
-        customer = Customer.objects.get(id=userData.customer.id)
-        subscription = stripe.Subscription.retrieve(active_subscription.id)
-        stripe.Subscription.modify(
-            subscription.id,
-            cancel_at_period_end=False,
-            proration_behavior='create_prorations',
-            items=[{
-                'id': subscription['items']['data'][0].id,
-                'price': price_id,
-            }]
-        )
-        time.sleep(2)
-    return redirect(reverse('speach:select_subscriptions'), context = {'segment': 'payments'})
+    payment_methods_data = PaymentMethod.objects.filter(customer=userdata.customer.id)
+    payment_methods = []
+    for payment_method in payment_methods_data:
+        payment_methods.append({"type" : payment_method.type.capitalize(), "name" : payment_method.billing_details.get("name")})
+    context['payment_methods'] = payment_methods
+
+    return render(request, 'subscriptions/select_subscriptions.html', context)
 
 @login_required(login_url="authentication:login")
 def confirm_subscription_cancel(request):
     return render(request, 'subscriptions/confirm_subscription_cancel.html', {'segment': 'payments'})
-    
+
+@login_required(login_url="authentication:login")
+def redeem_coupon(request):
+    form = EnterDiscountCodeForm()
+    return render(request, 'subscriptions/redeem_coupon.html', {'form': form, 'segment': 'payments'})
+
+@login_required(login_url="authentication:login")
+def redeemed_coupon(request):
+    if request.method == 'GET':
+        return redirect(reverse('speach:redeem_coupon'))
+    if request.method == 'POST':
+        form = EnterDiscountCodeForm(request.POST)
+        if form.is_valid():
+            discount_code = form.cleaned_data.get("discount_code", None)
+            existing_codes = DiscountCode.objects.filter(code = discount_code)
+            redeemed_code = None
+            for code in existing_codes:
+                if not code.was_used:
+                    code.was_used = True
+                    code.user_redeemed = request.user
+                    code.save()
+                    redeemed_code = code
+                    break
+            if redeemed_code is None:
+                messages.error(request, f"Invalid code")
+                return redirect(reverse('speach:redeem_coupon'))
+            else:
+                userdata = UserData.objects.get(user=request.user.pk)
+                userdata.bonus_uses += redeemed_code.uses_given
+                userdata.uses_left += redeemed_code.uses_given
+                userdata.save()
+
+                messages.success(request, f"Code redeemed successfully")
+                return redirect(reverse('speach:select_subscriptions'))
+        else:
+            messages.error(request, f"Invalid code")
+            return redirect(reverse('speach:redeem_coupon'))
+
+
 
 @login_required(login_url="authentication:login")
 def payment_methods(request):
@@ -87,10 +116,6 @@ def payment_methods(request):
     
     return HttpResponseRedirect(reverse('speach:speach', args=()))
 
-
-
-
-
 @login_required(login_url="authentication:login")
 def active_subscriptions(request):
     subscriptions = get_active_subscriptions(request.user.pk)
@@ -102,6 +127,11 @@ def active_subscriptions(request):
 
 @login_required(login_url="authentication:login")
 def cancel_subscription(request):
+    userdata = UserData.objects.get(user=request.user.pk)
+    userdata.bonus_uses += userdata.uses_left
+    userdata.uses_left = 0
+    userdata.save()
+
     subscriptions = get_active_subscriptions(request.user.pk)
     for subscription in subscriptions:
         subscription.cancel()
@@ -138,9 +168,37 @@ def payment_method_attached(event):
             customer.id,
             invoice_settings={'default_payment_method': payment_method.id}
         )
+        # Go over older payment methods and remove them
+        payment_methods = PaymentMethod.objects.filter(customer=customer.id)
+        for payment_method in payment_methods:
+            if payment_method.id != event.data['object']['id']:
+                payment_method.delete()
+        
         
     except Customer.DoesNotExist or PaymentMethod.DoesNotExist:
         logger.error(f"Customer {event.customer.id} or PaymentMethod {event.data.object.id}does not exist")
 
+@webhooks.handler('invoice.paid')
+def payment_succeeded(event):
+    customer = event.customer
+    userData = UserData.objects.get(customer=customer)
+    subscription_id = event.data['object']['subscription']
+    subscription = Subscription.objects.get(id=subscription_id)
+    new_uses = subscription.plan.product.metadata["use_pm"]
+    userData.uses_left = int(new_uses)
+    if userData.bonus_uses > 0:
+        userData.uses_left += userData.bonus_uses
+        userData.bonus_uses = 0
+    userData.save()
 
+@webhooks.handler('customer.subscription.updated')
+def subscription_updated(event):
+    print(event)
+
+@webhooks.handler('customer.subscription.deleted')
+def subscription_deleted(event):
+    customer = event.customer
+    userData = UserData.objects.get(customer=customer)
+    userData.uses_left = 0
+    userData.save()
     

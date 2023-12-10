@@ -10,11 +10,10 @@
 
 <div class="pcoded-main-container">
   <div class="pcoded-content">
-    <p> Note: if you intend to switch subscription, it is better to do it with subscription change, this way you will not lose your money.
-        otherwise, any outstanding subscription time will be lost!  </p>
-    <p> Otherwise, you still will be able to use the service until the end of your subscription time. We are sorry that you were not satisfied with 
-        our services. Care to leave us a feedback?</p>
-    <p> If you are sure canceling subscription is what you want, please click the button below. </p>
+    <p> You are about to cancel your subscription. </p>
+    <p> By canceling your subscription, you will lose the accesss to the service. Nevertheless, all the remaining uses
+      will be available and reimbursed to you if you decide to come back. If you have particular problems with our service, please leave a feedback so we can learn and improve </p>
+    <p> If you are sure canceling subscription is what you want, please click the red button below. </p>
     <form action={% url "speach:cancel_subscription" %} method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-danger">Cancel Subscription</button>
@@ -23,7 +22,6 @@
       <button type="submit" class="btn btn-primary">Go Back </button>
     </form>
   </div>
-
 </div>
 
 {% endblock content %}

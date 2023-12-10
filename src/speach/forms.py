@@ -2,8 +2,10 @@ from typing import Any, Dict, Mapping, Optional, Type, Union
 from django.core.files.base import File
 from django.db.models.base import Model
 from django.forms.utils import ErrorList
-from speach.models import PastRequest, Company, Feedback, FeedbackTopic, Service
+from speach.models import PastRequest, Company, Feedback, FeedbackTopic, Service, DiscountCode
 from django.forms import *
+from django.core import validators
+from django.core.exceptions import ValidationError
 from enum import Enum
 import logging
 
@@ -26,8 +28,32 @@ class operation_modes(Enum):
     VIEW = 0
     CREATE = 1
     UPDATE = 2
+    SUBMIT = 3
     def __str__(self) -> str:
         return self.name
+    
+
+
+
+class EnterDiscountCodeForm(Form):
+    discount_code = CharField(max_length=20)
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields['discount_code'].widget = TextInput(
+            attrs={
+                "name" : "name",
+                "class" : "form-control",
+                "id" : "company_name",
+            })
+
+
+    def clean(self) -> dict[str, Any]:
+        fields = super().clean()
+        print(fields)
+        fields['discount_code'] = DiscountCode.display_code_to_code(fields['discount_code'])
+        return fields
+        
+
 
 class CompanyForm(ModelForm):
     class Meta:
