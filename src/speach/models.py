@@ -25,7 +25,7 @@ class Service(models.Model):
 class UserData(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     customer = models.OneToOneField(Customer, on_delete=models.SET_NULL, null=True)
-    latest_company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+    latest_company = models.ForeignKey(Company, on_delete=models.SET_NULL, blank=True, null=True)
     email_confirmed = models.BooleanField(default=False) #NOT NEEDED TODO: REMOVE
     uses_left = models.IntegerField(default=0)
     bonus_uses = models.IntegerField(default=0)
